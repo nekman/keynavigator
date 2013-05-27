@@ -3,7 +3,7 @@ Keynavigator
 
 [![Build Status](https://travis-ci.org/nekman/keynavigator.png?branch=master)](https://travis-ci.org/nekman/keynavigator)
 
-A keynavigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.org">Zepto</a>.
+A keynavigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br/>
 Make it possible to use arrow keys for navigation in eg. `ul` or `table` element.
 
