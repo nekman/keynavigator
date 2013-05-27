@@ -1,4 +1,8 @@
-describe('KeyNavigator', function() {
+/*
+ * Testcase for the Keynavigator plugin.
+ * Needs refactoring.
+ */
+describe('Keynavigator', function() {
 
   var domino = require('domino'),
       $ = require('jquery'),
