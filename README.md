@@ -83,8 +83,8 @@ $('ul li').keynavigator({
 });
 ```
 
-<strong>AMD support</strong>
-This plugin register it self as a <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD-module</a>. <br/>
+<strong>AMD support</strong><br/>
+<a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD</a> usage:<br/>
 
 ```javascript
 define(['keynavigator'], function($) {
