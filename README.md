@@ -3,9 +3,9 @@ Keynavigator
 
 [![Build Status](https://travis-ci.org/nekman/keynavigator.png?branch=master)](https://travis-ci.org/nekman/keynavigator)
 
-A keynavigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
+A arrow key navigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br/>
-Make it possible to use arrow keys for navigation in eg. `ul` or `table` element.
+Makes it possible to use arrow keys for navigation in eg. `ul` or `table` elements.
 
 ###Usage
 ```javascript
@@ -48,7 +48,7 @@ $('selector').keynavigator({settings} /* optional */);
  				 40: 'down' }
 ```
 
-###Example:
+<strong>Example</strong>
 
 ```html
 <ul>
@@ -68,7 +68,7 @@ $('selector').keynavigator({settings} /* optional */);
 $('ul li').keynavigator();
 ```
 
-###Example with settings:
+<strong>Example with settings</strong>
 ```javascript
 $('ul li').keynavigator({
 	click: function($el) {
@@ -82,3 +82,15 @@ $('ul li').keynavigator({
     }
 });
 ```
+
+<strong>AMD support</strong>
+This plugin register it self as a <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD-module</a>. <br/>
+
+```javascript
+define(['keynavigator'], function($) {
+	$('table > tbody tr').keynavigator({         
+        cycle: true
+    });
+});
+```
+
