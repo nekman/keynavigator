@@ -83,8 +83,7 @@ $('ul li').keynavigator({
 });
 ```
 
-<strong>AMD support</strong><br/>
-<a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD</a> usage:<br/>
+<a href="http://requirejs.org">RequireJS</a> usage:<br/>
 
 ```javascript
 require(['keynavigator'], function($) {
