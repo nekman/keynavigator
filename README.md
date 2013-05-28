@@ -87,7 +87,7 @@ $('ul li').keynavigator({
 <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD</a> usage:<br/>
 
 ```javascript
-define(['keynavigator'], function($) {
+require(['keynavigator'], function($) {
 	$('table > tbody tr').keynavigator({         
         cycle: true
     });
