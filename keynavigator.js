@@ -1,9 +1,9 @@
 /*
  * Arrow key navigator for jQuery / Zepto.
  *
- * Usage: $('selector').keynavigator(options);
+ * Usage: $('selector').keynavigator(settings);
  *        
- * @param options - {object}
+ * @param settings - {object}
  *    {
  *      cycle: {boolean} - if true, use cycle navigation
  *          - default: false     
@@ -49,7 +49,7 @@
     // 
     //    define('jquery', window.Zepto);
     //
-    define('jquery.keynavigator', ['jquery'], factory);
+    define('keynavigator', ['jquery'], factory);
   } else {
     // Not using require.js.
     factory(root.jQuery || root.Zepto);
