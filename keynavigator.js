@@ -1,49 +1,15 @@
-/*
- * Arrow key navigator for jQuery / Zepto.
+/*!
+ * Key navigator plugin for jQuery / Zepto.
  *
- * Usage: $('selector').keynavigator(settings);
- *        
- * @param settings - {object}
- *    {
- *      cycle: {boolean} - if true, use cycle navigation
- *          - default: false     
- *
- *      useCache: {boolean} - if false, run the selector on each keydown. Useful if elements are added/removed from the DOM.
- *          - default: true  
- *
- *      activeClass: {string} - The name of the class that should be used for the active element.
- *          - default: 'active'
- *
- *      tabindex: {number} - the tabindex that should be used on the parent element.
- *          - default: -1   
- *
- *      enter: {function}: 
- *          arguments ($selectedElement, event) - callback function when user press enter
- *          (The context 'this' is set to KeyNavigator instance).
- *          - default: empty function
- *
- *      click: {function}: 
- *          arguments ($selectedElement, event) - callback function when user clicks on a element
- *          (The context 'this' is set to KeyNavigator instance).
- *          - default: calls KeyNavigator.prototype.setActiveElement.      
- *
- *      keyMappings: {object}:        
- *         Key mappings for enter/return, up/down arrows. Should not need to be changed.
- *          - default: 13: 'enter',
- *                     38: 'up',
- *                     40: 'down'
- *
- *    }
- *
+ * https://github.com/nekman/keynavigator
  */
 (function(root, factory) {
   'use strict';
-  // CommonJS - NOTE: Only jQuery.
+  // CommonJS
   if (typeof exports === 'object') {
      module.exports = factory(require('jquery'));
-  }
-  // Register as a AMD module if using require.js.
-  else if (typeof root.define === 'function' && root.define.amd) {
+  } else if (typeof root.define === 'function' && root.define.amd) {
+    // AMD. Register as an anonymous module.
     // jQuery 1.7+ registers it self as a AMD module. 
     // If Zepto is used, define jquery and return Zepto eg:
     // 
@@ -51,13 +17,12 @@
     //
     define('keynavigator', ['jquery'], factory);
   } else {
-    // Not using require.js.
+    // AMD isn't being used. Assume jQuery or Zepto are loaded from <script> tags.
     factory(root.jQuery || root.Zepto);
   }
 }(this, function($) {
   // Constructor
-  var KeyNavigator = function($nodes, $parent, options)  {
-    // Not a very safe constructor, but it have to do
+  var KeyNavigator = function($nodes, $parent, options)  {    
     this.options = $.extend({}, this.defaults, options || {});
     this.options.activeClassName = '.' + this.options.activeClass;
     this.index = -1;
@@ -198,7 +163,7 @@
   };
 
   // Just return the $-function. 
-  // Needed (good practice) for AMD modules.
+  // Needed (good practice) for AMD / UMD modules.
   return $;
 
 }));
