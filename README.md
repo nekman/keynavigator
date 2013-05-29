@@ -73,11 +73,9 @@ $('ul li').keynavigator();
 $('ul li').keynavigator({
 	click: function($el) {
         console.log('clicked on', $el);
-        this.setActiveElement($el);
     },
     
     enter: function($el) {
-        //$el.find('a').trigger('click');
         console.log('pressed return on', $el.find('a').text());
     }
 });
