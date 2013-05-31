@@ -23,7 +23,7 @@
 }(this, function($) {
 
   var defaultEventHandlers = {
-    down: function() {
+    down: function($el) {
       var len = this.$nodes.length - 1;
 
       if (this.options.cycle) {
@@ -37,9 +37,10 @@
       }
 
       this.setActive();
+      $el.trigger('up');
     },
 
-    up: function() {
+    up: function($el) {
       if (this.options.cycle) {
         if (this.index <= 0) {
           this.index = this.$nodes.length;
@@ -51,6 +52,7 @@
       }
 
       this.setActive();
+      $el.trigger('down');
     }
   };
 
@@ -84,20 +86,17 @@
       useCache: true,
       cycle: false,
       activeClass: 'active',
-      // 38-up, 40-down
+      // 38: arrow up, 40: arrow down
       keyMappings: {
-        38: 'up',
-        40: 'down'
-      },
-      click: function($el) {
-        this.setActiveElement($el);
+        38: defaultEventHandlers.up,
+        40: defaultEventHandlers.down
       }
     },
 
     handleKeyDown: function(e) {
       // Use event.which property to normalizes event.keyCode and event.charCode
-      var handler = this.options.keyMappings[e.which];
-      if (!handler) {
+      var fn = this.options.keyMappings[e.which];
+      if (!fn) {
         // No handler found for current keyCode.
         return;
       }
@@ -111,12 +110,6 @@
       var $selected = this.$parent.find(this.options.activeClassName);
       if (this.index < 0) {
           this.index = $selected.index();
-      }
-
-      var fn = ($.isFunction(handler) ? handler : defaultEventHandlers[handler]);
-      if (!fn) {
-        // Could not find any function for the handler.
-        throw 'Could not find any function for keyCode: ' + e.which;
       }
 
       fn.apply(this, [$selected, e]);

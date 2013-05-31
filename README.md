@@ -5,7 +5,7 @@ Keynavigator
 
 Key navigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br/>
-Makes it possible to use arrow keys for navigation in eg. `ul` or `table` elements.
+Makes it possible to use arrow keys (or any key) for navigation in eg. `ul` or `table` elements.
 
 ###Usage
 ```javascript
