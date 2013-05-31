@@ -69,10 +69,10 @@ $('ul li').keynavigator();
 <strong>Example with settings</strong>
 ```javascript
 $('ul li').keynavigator({
-	click: function($el) {
+  click: function($el) {
     console.log('clicked on', $el);
   },
-  
+
   enter: function($el) {
     console.log('pressed return on', $el.find('a').text());
   },
@@ -89,7 +89,7 @@ $('ul li').keynavigator({
 
 ```javascript
 require(['keynavigator'], function($) {
-	$('table > tbody tr').keynavigator({
+  $('table > tbody tr').keynavigator({
     cycle: true
   });
 });
