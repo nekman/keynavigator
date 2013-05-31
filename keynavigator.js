@@ -21,10 +21,58 @@
     factory(root.jQuery || root.Zepto);
   }
 }(this, function($) {
-  // Constructor
-  var KeyNavigator = function($nodes, $parent, options)  {    
-    this.options = $.extend({}, this.defaults, options || {});
+
+  var defaultEventHandlers = {
+    click: function() {
+      $.isFunction(this.options.click) && this.options.click.apply(this, arguments);
+    },
+
+    enter: function() {
+      $.isFunction(this.options.enter) && this.options.click.apply(this, arguments);
+    },
+
+    down: function() {
+      var len = this.$nodes.length - 1;
+
+      if (this.options.cycle) {
+        if (this.index >= len) {
+          this.index = -1;
+        }
+      }
+
+      if (this.index < len) {
+        this.index++;
+      }
+
+      this.setActive();
+    },
+
+    up: function() {
+      if (this.options.cycle) {
+        if (this.index <= 0) {
+          this.index = this.$nodes.length;
+        }
+      }
+
+      if (this.index > 0) {
+        this.index--;
+      }
+
+      this.setActive();
+    }
+  };
+
+  // Constructor  
+  var KeyNavigator = function($nodes, $parent, settings)  {
+    // Extend custom settings with default settings.
+    // Could "deep copy" ($.extend(true, ...)) the entire settings, but this could result
+    // in conflicts betweeen methods provided by KeyNavigator and methods provided
+    // by the user.
+    var options = settings || {};
+    this.options = $.extend({}, this.defaults, options);
+    this.options.keyMappings = $.extend({}, this.defaults.keyMappings, options.keyMappings);
     this.options.activeClassName = '.' + this.options.activeClass;
+
     this.index = -1;
     this.selector = $nodes.selector;
     this.$nodes = $nodes;
@@ -44,25 +92,22 @@
       useCache: true,
       cycle: false,
       activeClass: 'active',
-      // 38-up, 40-down, 13-return
+      // 38-up, 40-down
       keyMappings: {
-        13: 'enter',
         38: 'up',
         40: 'down'
       },
-
       click: function($el) {
         this.setActiveElement($el);
       }
     },
 
     handleKeyDown: function(e) {
-      var fn = this.events[this.options.keyMappings[e.keyCode]];
-      if (!fn) {
+      var handler = this.options.keyMappings[e.keyCode];
+      if (!handler) {
+        // No handler found for current keyCode.
         return;
       }
-
-      e.preventDefault && e.preventDefault();
 
       // If "useCache" isn't enabled, 
       // then query for DOM-nodes with the same selector.
@@ -73,6 +118,12 @@
       var $selected = this.$parent.find(this.options.activeClassName);
       if (this.index < 0) {
           this.index = $selected.index();
+      }
+
+      var fn = ($.isFunction(handler) ? handler : defaultEventHandlers[handler]);
+      if (!fn) {
+        // Could not find any function for the handler.
+        throw new Error('Could not find any function for keyCode: ' + e.keyCode);
       }
 
       fn.apply(this, [$selected, e]);
@@ -99,47 +150,8 @@
 
       this.index = index;
       this.setActive();
-    },
-
-    events: {
-      click: function() {
-        return (this.options.click || $.noop).apply(this, arguments);
-      },
-
-      enter: function() {
-        return (this.options.enter || $.noop).apply(this, arguments);
-      },
-
-      down: function() {
-        var len = this.$nodes.length - 1;
-
-        if (this.options.cycle) {
-          if (this.index >= len) {
-            this.index = -1;
-          }
-        }
-
-        if (this.index < len) {
-          this.index++;
-        }
-
-        this.setActive();
-      },
-
-      up: function() {
-        if (this.options.cycle) {
-          if (this.index <= 0) {
-            this.index = this.$nodes.length;
-          }
-        }
-
-        if (this.index > 0) {
-          this.index--;
-        }
-
-        this.setActive();
-      }
     }
+
   };
 
   $.fn.keynavigator = function(options) {
@@ -150,7 +162,7 @@
     // jQuery 1.7+ bind() calls on().
     // See line ~3360 in http://code.jquery.com/jquery-latest.js.         
     this.bind('click', function(e) {
-        navigator.events.click.apply(navigator, [$(this), e]);
+        defaultEventHandlers.click.apply(navigator, [$(this), e]);
     });
 
     $parent

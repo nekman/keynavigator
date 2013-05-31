@@ -12,7 +12,6 @@
     "domino": "*",
     "jasmine-node": "1.4",
     "uglify-js2" : "2.1.11"
-
   },
   "scripts": {
     "test": "jasmine-node test --verbose" 

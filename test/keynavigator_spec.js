@@ -27,9 +27,42 @@ describe('Keynavigator', function() {
     };
   });
 
+  var createKeyEvent = function(keyCode) {
+    return $.Event('keydown', { keyCode: keyCode });
+  },
 
-  var arrowDownEvent = $.Event('keydown', { keyCode: 40 /* arrow down */ }),
-      arrowUpEvent = $.Event('keydown', { keyCode: 38 /* arrow up */ });
+  arrowDownEvent = createKeyEvent(40 /* arrow down */),
+  arrowUpEvent = createKeyEvent(38 /* arrow up */);
+
+  describe('Custom settings', function() {
+
+    it('handles bad settings', function() {
+      $('ul li').keynavigator(null)
+                .keynavigator('')
+                .keynavigator('a');
+    });
+
+    it('handles any key', function() {
+      // Arrange      
+      var settings = {
+          keyMappings: {
+            65: function($el) {
+            }
+          }
+      };
+
+      spyOn(settings.keyMappings, '65');
+      var nodes = $('ul li', document).keynavigator(settings);
+
+      // Act
+      nodes.parent().focus().trigger(createKeyEvent(65));
+
+      // Assert
+      expect(nodes.first().hasClass('activeClass')).toBe(false);
+      expect(settings.keyMappings['65']).toHaveBeenCalled();
+    });
+  });
+
 
   describe('Click', function() {
 

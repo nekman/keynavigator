@@ -3,7 +3,7 @@ Keynavigator
 
 [![Build Status](https://travis-ci.org/nekman/keynavigator.png?branch=master)](https://travis-ci.org/nekman/keynavigator)
 
-A arrow key navigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
+Key navigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br/>
 Makes it possible to use arrow keys for navigation in eg. `ul` or `table` elements.
 
@@ -40,12 +40,10 @@ $('selector').keynavigator({settings} /* optional */);
  	
  	- default: calls KeyNavigator.prototype.setActiveElement.      
  
- keyMappings: {object}:        
- 	Key mappings for enter/return, up/down arrows. Should not need to be changed.
- 	
- 	- default: { 13: 'enter',
- 				 38: 'up',
- 				 40: 'down' }
+ keyMappings: {object}: Callback functions when a certain key is pressed. See example below.
+ 	- example: { 
+      65: function($el) { console.log('pressed', $el); }
+    }
 ```
 
 <strong>Example</strong>
@@ -72,12 +70,18 @@ $('ul li').keynavigator();
 ```javascript
 $('ul li').keynavigator({
 	click: function($el) {
-        console.log('clicked on', $el);
-    },
-    
-    enter: function($el) {
-        console.log('pressed return on', $el.find('a').text());
+    console.log('clicked on', $el);
+  },
+  
+  enter: function($el) {
+    console.log('pressed return on', $el.find('a').text());
+  },
+
+  keyMappings: {
+    '65': function($el) {
+      console.log('character "a" was pressed return on', $el.find('a').text());
     }
+  }
 });
 ```
 
@@ -85,9 +89,9 @@ $('ul li').keynavigator({
 
 ```javascript
 require(['keynavigator'], function($) {
-	$('table > tbody tr').keynavigator({         
-        cycle: true
-    });
+	$('table > tbody tr').keynavigator({
+    cycle: true
+  });
 });
 ```
 
