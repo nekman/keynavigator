@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" />
+    <style>
+      ul, table > tbody {
+         outline: none;
+      }
+
+      .active-yellow {
+        background-color: yellow;
+      }
+    </style>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>    
+    <script>
+      require.config({
+        paths: {
+          jquery: 'http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min',
+          bootstrap: 'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min'
+        },
+
+        shim: {
+          bootstrap: {
+            deps: ['jquery', 'keynavigator'],
+
+            exports: 'jQuery'
+          }
+        }
+      });
+
+      require(['bootstrap'], function($) {
+        $('ul li').keynavigator({
+          
+          keyMappings: {
+            // User have pressed 'a'
+            65: function($el) { 
+              console.log('character "a" was pressed return on', $el.find('a').text());
+            }
+          }          
+        });
+        
+        $('table > tbody tr').keynavigator({         
+          cycle: true,
+          activeClass: 'active-yellow',
+          keyMappings: {
+            13: function($el) {
+                console.log($el);
+            }
+          }
+        });
+
+      });
+
+    </script>    
+  </head>
+
+  <body>
+    <h3>Navigate with up and down arrows</h3>
+      
+      <ul class="nav nav-pills nav-stacked">
+        <li>
+            <a href="#">Option 1</a>
+        </li>
+        <li>
+            <a href="#">Option 2</a>
+        </li>
+        <li>
+            <a href="#">Option 3</a>
+        </li>
+      </ul>
+
+      <hr />
+
+      Cycle = true
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+
+  </body>
+
+</html>
