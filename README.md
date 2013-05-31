@@ -28,18 +28,6 @@ $('selector').keynavigator({settings} /* optional */);
  tabindex: {number} - the tabindex that should be used on the parent element.
  	- default: -1   
  
- enter: {function}: 
- 	arguments ($selectedElement, event) - callback function when user press enter
- 	(The context 'this' is set to KeyNavigator instance).
-
- 	- default: empty function
-
- click: {function}: 
- 	arguments ($selectedElement, event) - callback function when user clicks on a element
- 	(The context 'this' is set to the KeyNavigator instance).
- 	
- 	- default: calls KeyNavigator.prototype.setActiveElement.      
- 
  keyMappings: {object}: Callback functions when a certain key is pressed. See example below.
  	- example: { 
       65: function($el) { console.log('pressed', $el); }
@@ -69,14 +57,6 @@ $('ul li').keynavigator();
 <strong>Example with settings</strong>
 ```javascript
 $('ul li').keynavigator({
-  click: function($el) {
-    console.log('clicked on', $el);
-  },
-
-  enter: function($el) {
-    console.log('pressed return on', $el.find('a').text());
-  },
-
   keyMappings: {
     '65': function($el) {
       console.log('character "a" was pressed return on', $el.find('a').text());

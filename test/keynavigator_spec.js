@@ -28,7 +28,7 @@ describe('Keynavigator', function() {
   });
 
   var createKeyEvent = function(keyCode) {
-    return $.Event('keydown', { keyCode: keyCode });
+    return $.Event('keydown', { which: keyCode });
   },
 
   arrowDownEvent = createKeyEvent(40 /* arrow down */),
@@ -63,69 +63,74 @@ describe('Keynavigator', function() {
     });
   });
 
+  describe('Tabindex', function() {
 
-  describe('Click', function() {
+    it('should set tabindex from submited settings on parent element', function() {
+        var $parent = $('ul li', document).keynavigator({
+          tabindex: 10
+        }).parent();
 
-    it('sets active class on element click', function() {
-      // Arrange
-      var nodes = $('ul li', document).keynavigator({
-        activeClass: 'activeClass'
-      });
-
-      // Act
-      nodes.last().trigger('click');
-
-      // Assert
-      expect(nodes.first().hasClass('activeClass')).toBe(false);
-      expect(nodes.last().hasClass('activeClass')).toBe(true);
+        expect($parent.attr('tabindex')).toBe('10');
     });
-  });
 
+    it('should set default tabindex on parent element', function() {
+        var $parent = $('ul li', document).keynavigator().parent();
+
+        expect($parent.attr('tabindex')).toBe('-1');
+    });
+
+  });
 
   describe('Cache', function() {
 
     describe('is enabled', function() {
 
       it('should not reuse the selector on navigation', function(){
-        var keynavigator;
-        var nodes = $('ul li', document).keynavigator({
+        var keynavigator,
+            expectedElementLength = 3,
+        nodes = $('ul li', document).keynavigator({
           activeClass: 'activeClass',
-          click: function() {
-            // Capture current instance of keynavigator.
-            keynavigator = this;
+          keyMappings: {
+            37: function() {
+              // Capture current instance of keynavigator.
+              keynavigator = this;
+            }
           }
         });
 
-        nodes.last().trigger('click');
+        nodes.last().trigger(createKeyEvent('37'));
         nodes.parent().append(document.createElement('li'))
                       .focus()
                       .trigger(arrowDownEvent);
 
         // Verify that the keynavigator.$nodes don't have been updated.
-        expect(keynavigator.$nodes.length).toBe(3);
+        expect(keynavigator.$nodes.length).toBe(expectedElementLength);
       });
     });
 
     describe('is not enabled', function() {
 
       it('should reuse the selector on navigation', function() {
-        var keynavigator;
-        var nodes = $('ul li', document).keynavigator({
+        var keynavigator,
+            expectedElementLength = 4,
+        nodes = $('ul li', document).keynavigator({
           activeClass: 'activeClass',
           useCache: false,
-          click: function() {
-            // Capture current instance of keynavigator.
-            keynavigator = this;
+          keyMappings: {
+            37: function() {
+              // Capture current instance of keynavigator.
+              keynavigator = this;
+            }
           }
         });
 
-        nodes.last().trigger('click');
+        nodes.last().trigger(createKeyEvent('37'));
         nodes.parent().append(document.createElement('li'))
                       .focus()
                       .trigger(arrowDownEvent);
 
         // Verify that the keynavigator.$nodes has been updated.
-        expect(keynavigator.$nodes.length).toBe(4);
+        expect(keynavigator.$nodes.length).toBe(expectedElementLength);
       });
     });
 
@@ -178,4 +183,5 @@ describe('Keynavigator', function() {
       expect(nodes[0].className).toBe('activeClass');
     });
   });
+
 });

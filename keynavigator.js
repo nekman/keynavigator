@@ -23,14 +23,6 @@
 }(this, function($) {
 
   var defaultEventHandlers = {
-    click: function() {
-      $.isFunction(this.options.click) && this.options.click.apply(this, arguments);
-    },
-
-    enter: function() {
-      $.isFunction(this.options.enter) && this.options.enter.apply(this, arguments);
-    },
-
     down: function() {
       var len = this.$nodes.length - 1;
 
@@ -103,7 +95,8 @@
     },
 
     handleKeyDown: function(e) {
-      var handler = this.options.keyMappings[e.keyCode];
+      // Use event.which property to normalizes event.keyCode and event.charCode
+      var handler = this.options.keyMappings[e.which];
       if (!handler) {
         // No handler found for current keyCode.
         return;
@@ -123,7 +116,7 @@
       var fn = ($.isFunction(handler) ? handler : defaultEventHandlers[handler]);
       if (!fn) {
         // Could not find any function for the handler.
-        throw new Error('Could not find any function for keyCode: ' + e.keyCode);
+        throw 'Could not find any function for keyCode: ' + e.which;
       }
 
       fn.apply(this, [$selected, e]);
@@ -162,7 +155,7 @@
     // jQuery 1.7+ bind() calls on().
     // See line ~3360 in http://code.jquery.com/jquery-latest.js.         
     this.bind('click', function(e) {
-        defaultEventHandlers.click.apply(navigator, [$(this), e]);
+        navigator.setActiveElement($(this));
     });
 
     $parent
