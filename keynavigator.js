@@ -28,7 +28,7 @@
     },
 
     enter: function() {
-      $.isFunction(this.options.enter) && this.options.click.apply(this, arguments);
+      $.isFunction(this.options.enter) && this.options.enter.apply(this, arguments);
     },
 
     down: function() {
