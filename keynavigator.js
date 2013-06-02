@@ -37,7 +37,7 @@
       }
 
       this.setActive();
-      $el.trigger('up');
+      $el.trigger('down');
     },
 
     up: function($el) {
@@ -52,7 +52,7 @@
       }
 
       this.setActive();
-      $el.trigger('down');
+      $el.trigger('up');
     }
   };
 
