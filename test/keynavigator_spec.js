@@ -45,13 +45,13 @@ describe('Keynavigator', function() {
     it('handles any key', function() {
       // Arrange      
       var settings = {
-          keyMappings: {
+          keys: {
             65: function($el) {
             }
           }
       };
 
-      spyOn(settings.keyMappings, '65');
+      spyOn(settings.keys, '65');
       var nodes = $('ul li', document).keynavigator(settings);
 
       // Act
@@ -59,24 +59,52 @@ describe('Keynavigator', function() {
 
       // Assert
       expect(nodes.first().hasClass('activeClass')).toBe(false);
-      expect(settings.keyMappings['65']).toHaveBeenCalled();
+      expect(settings.keys['65']).toHaveBeenCalled();
     });
+  });
+
+  describe('Events', function() {
+
+    it('triggers custom up/down events', function() {
+      // Arrange
+      var methods = {
+        down: $.noop,
+        up: $.noop
+      };
+
+      spyOn(methods, 'down');
+      spyOn(methods, 'up');
+
+      var nodes = $('ul li', document)
+          .on('down', methods.down)
+          .on('up', methods.up)
+          .keynavigator();
+
+      // Act
+      nodes.trigger(arrowDownEvent);
+      nodes.trigger(arrowUpEvent);
+
+      // Assert
+      expect(methods.down).toHaveBeenCalled();
+      expect(methods.up).toHaveBeenCalled();
+    });
+
   });
 
   describe('Tabindex', function() {
 
     it('should set tabindex from submited settings on parent element', function() {
-        var $parent = $('ul li', document).keynavigator({
-          tabindex: 10
-        }).parent();
+      var $parent = $('ul li', document).keynavigator({
+        tabindex: 10
+      }).parent();
 
-        expect($parent.attr('tabindex')).toBe('10');
+      expect($parent.attr('tabindex')).toBe('10');
     });
 
     it('should set default tabindex on parent element', function() {
-        var $parent = $('ul li', document).keynavigator().parent();
+      var $parent = $('ul li', document).keynavigator().parent();
 
-        expect($parent.attr('tabindex')).toBe('-1');
+      expect($parent.attr('tabindex')).toBe('-1');
     });
 
   });
@@ -90,7 +118,7 @@ describe('Keynavigator', function() {
             expectedElementLength = 3,
         nodes = $('ul li', document).keynavigator({
           activeClass: 'activeClass',
-          keyMappings: {
+          keys: {
             37: function() {
               // Capture current instance of keynavigator.
               keynavigator = this;
@@ -116,7 +144,7 @@ describe('Keynavigator', function() {
         nodes = $('ul li', document).keynavigator({
           activeClass: 'activeClass',
           useCache: false,
-          keyMappings: {
+          keys: {
             37: function() {
               // Capture current instance of keynavigator.
               keynavigator = this;

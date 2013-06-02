@@ -38,6 +38,7 @@
 
       this.setActive();
       $el.trigger('down');
+
     },
 
     up: function($el) {
@@ -64,7 +65,7 @@
     // by the user.
     var options = settings || {};
     this.options = $.extend({}, this.defaults, options);
-    this.options.keyMappings = $.extend({}, this.defaults.keyMappings, options.keyMappings);
+    this.options.keys = $.extend({}, this.defaults.keys, options.keys);
     this.options.activeClassName = '.' + this.options.activeClass;
 
     this.index = -1;
@@ -87,7 +88,7 @@
       cycle: false,
       activeClass: 'active',
       // 38: arrow up, 40: arrow down
-      keyMappings: {
+      keys: {
         38: defaultEventHandlers.up,
         40: defaultEventHandlers.down
       }
@@ -95,7 +96,7 @@
 
     handleKeyDown: function(e) {
       // Use event.which property to normalizes event.keyCode and event.charCode
-      var fn = this.options.keyMappings[e.which];
+      var fn = this.options.keys[e.which];
       if (!fn) {
         // No handler found for current keyCode.
         return;
