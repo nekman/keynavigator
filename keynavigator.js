@@ -102,6 +102,8 @@
         return;
       }
 
+      e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
       // If "useCache" isn't enabled, 
       // then query for DOM-nodes with the same selector.
       if (!this.options.useCache) {
