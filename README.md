@@ -3,7 +3,7 @@ Keynavigator
 
 [![Build Status](https://travis-ci.org/nekman/keynavigator.png?branch=master)](https://travis-ci.org/nekman/keynavigator)
 
-Key navigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
+Key navigaton plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br/>
 Makes it possible to use arrow keys (or any key) for navigation in eg. `ul` or `table` elements.
 
@@ -12,66 +12,64 @@ Makes it possible to use arrow keys (or any key) for navigation in eg. `ul` or `
 $('selector').keynavigator({settings} /* optional */);
 ```
 
-<strong>Settings</strong>
+####Installation
+Include keynavigator.js after having included jQuery (or Zepto):
+```html
+<script src="jquery.js"></script>
+<script src="keynavigator.js"></script>
+```
+Start the keynavigator plugin.
+```javascript
+$(document).ready(function() {
+  $('ul#example li').keynavigator();
+});  
+```
 
+####Installation using RequireJS.
+Include <a href="http://requirejs.org">RequireJS</a>.
+```html
+<script src="require.js"></script>
+```
+Start the keynavigator plugin.
+```javascript
+require(['keynavigator'], function() {
+  $('ul#example li').keynavigator();
+});  
+
+```
+
+####Settings
 ```
  cycle: {boolean} - if true, use cycle navigation
- 	- default: false     
+  - default: false     
  
  useCache: {boolean} - if false, run the selector on each keydown. 
- 					   Useful if elements are added/removed from the DOM.
- 	- default: true  
+             Useful if elements are added/removed from the DOM.
+  - default: true  
  
  activeClass: {string} - The name of the class that should be used for the active element.
- 	- default: 'active'
+  - default: 'active'
  
  tabindex: {number} - the tabindex that should be used on the parent element.
- 	- default: -1   
+  - default: -1   
  
- keys: {object}: Callback functions when a certain key is pressed. See example below.
- 	- example: { 
-      65: function($el) { console.log('pressed', $el); }
+ keys: {object}: Callback functions when a key is pressed.
+  - example: { 
+      65: function($el, e) { console.log('pressed', $el, e); }
     }
 ```
-
-<strong>Example</strong>
-
-```html
-<ul>
-  <li>
-      <a href="#">Option 1</a>
-  </li>
-  <li>
-      <a href="#">Option 2</a>
-  </li>
-  <li>
-      <a href="#">Option 3</a>
-  </li>
-</ul>
-```
-
+<strong>Custom events</strong>
+Subscribe to ```up``` and ```down``` events using:
 ```javascript
-$('ul li').keynavigator();
+$('ul#example li').keynavigator()
+                  .on('up', function(e, $el) {
+                    console.log('Pressed up on', $el);
+                  })
+                  .on('down', function(e, $el) {
+                    console.log('Pressed down on', $el);
+                  });
 ```
+#### Demos and examples
+Is available on the project web page - http://nekman.github.io/keynavigator
 
-<strong>Example with settings</strong>
-```javascript
-$('ul li').keynavigator({
-  keys: {
-    '65': function($el) {
-      console.log('character "a" was pressed return on', $el.find('a').text());
-    }
-  }
-});
-```
-
-<a href="http://requirejs.org">RequireJS</a> usage:<br/>
-
-```javascript
-require(['keynavigator'], function($) {
-  $('table > tbody tr').keynavigator({
-    cycle: true
-  });
-});
-```
 
