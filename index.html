@@ -31,9 +31,7 @@
         <h1>
 <a name="keynavigator" class="anchor" href="#keynavigator"><span class="octicon octicon-link"></span></a>Keynavigator</h1>
 
-<p><a href="https://travis-ci.org/nekman/keynavigator"><img src="https://travis-ci.org/nekman/keynavigator.png?branch=master" alt="Build Status"></a></p>
-
-<p>Key navigator plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
+<p>Key navigaton plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br>
 Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul</code> or <code>table</code> elements.</p>
 
@@ -43,63 +41,70 @@ Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul<
 <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'selector'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">({</span><span class="nx">settings</span><span class="p">}</span> <span class="cm">/* optional */</span><span class="p">);</span>
 </pre></div>
 
-<p><strong>Settings</strong></p>
+<h4>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h4>
+
+<p>Include keynavigator.js after having included jQuery (or Zepto):</p>
+
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"keynavigator.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<p>Start the keynavigator plugin.</p>
+
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">();</span>
+<span class="p">});</span>  
+</pre></div>
+
+<h4>
+<a name="installation-using-requirejs" class="anchor" href="#installation-using-requirejs"><span class="octicon octicon-link"></span></a>Installation using RequireJS.</h4>
+
+<p>Include <a href="http://requirejs.org">RequireJS</a>.</p>
+
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"require.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<p>Start the keynavigator plugin.</p>
+
+<div class="highlight"><pre><span class="nx">require</span><span class="p">([</span><span class="s1">'keynavigator'</span><span class="p">],</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">();</span>
+<span class="p">});</span>  
+
+</pre></div>
+
+<h4>
+<a name="settings" class="anchor" href="#settings"><span class="octicon octicon-link"></span></a>Settings</h4>
 
 <pre><code> cycle: {boolean} - if true, use cycle navigation
-    - default: false     
+  - default: false     
 
  useCache: {boolean} - if false, run the selector on each keydown. 
-                       Useful if elements are added/removed from the DOM.
-    - default: true  
+             Useful if elements are added/removed from the DOM.
+  - default: true  
 
  activeClass: {string} - The name of the class that should be used for the active element.
-    - default: 'active'
+  - default: 'active'
 
  tabindex: {number} - the tabindex that should be used on the parent element.
-    - default: -1   
+  - default: -1   
 
- keys: {object}: Callback functions when a certain key is pressed. See example below.
-    - example: { 
-      65: function($el) { console.log('pressed', $el); }
+ keys: {object}: Callback functions when a key is pressed.
+  - example: { 
+      65: function($el, e) { console.log('pressed', $el, e); }
     }
 </code></pre>
 
-<p><strong>Example</strong></p>
+<p><strong>Custom events</strong>
+Subscribe to <code>up</code> and <code>down</code> events using:</p>
 
-<div class="highlight"><pre><span class="nt">&lt;ul&gt;</span>
-  <span class="nt">&lt;li&gt;</span>
-      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>Option 1<span class="nt">&lt;/a&gt;</span>
-  <span class="nt">&lt;/li&gt;</span>
-  <span class="nt">&lt;li&gt;</span>
-      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>Option 2<span class="nt">&lt;/a&gt;</span>
-  <span class="nt">&lt;/li&gt;</span>
-  <span class="nt">&lt;li&gt;</span>
-      <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span><span class="nt">&gt;</span>Option 3<span class="nt">&lt;/a&gt;</span>
-  <span class="nt">&lt;/li&gt;</span>
-<span class="nt">&lt;/ul&gt;</span>
-</pre></div>
-
-<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'ul li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">();</span>
-</pre></div>
-
-<p><strong>Example with settings</strong></p>
-
-<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'ul li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">({</span>
-  <span class="nx">keys</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s1">'65'</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'character "a" was pressed return on'</span><span class="p">,</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">text</span><span class="p">());</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-
-<p><a href="http://requirejs.org">RequireJS</a> usage:<br></p>
-
-<div class="highlight"><pre><span class="nx">require</span><span class="p">([</span><span class="s1">'keynavigator'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">'table &gt; tbody tr'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">({</span>
-    <span class="nx">cycle</span><span class="o">:</span> <span class="kc">true</span>
-  <span class="p">});</span>
-<span class="p">});</span>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">()</span>
+                  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'up'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Pressed up on'</span><span class="p">,</span> <span class="nx">$el</span><span class="p">);</span>
+                  <span class="p">})</span>
+                  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'down'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Pressed down on'</span><span class="p">,</span> <span class="nx">$el</span><span class="p">);</span>
+                  <span class="p">});</span>
 </pre></div>
       </section>
       <footer>
