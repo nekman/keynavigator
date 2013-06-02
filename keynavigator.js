@@ -23,15 +23,7 @@
 }(this, function($) {
 
   var defaultEventHandlers = {
-    click: function() {
-      $.isFunction(this.options.click) && this.options.click.apply(this, arguments);
-    },
-
-    enter: function() {
-      $.isFunction(this.options.enter) && this.options.enter.apply(this, arguments);
-    },
-
-    down: function() {
+    down: function($el) {
       var len = this.$nodes.length - 1;
 
       if (this.options.cycle) {
@@ -45,9 +37,11 @@
       }
 
       this.setActive();
+      $el.trigger('down');
+
     },
 
-    up: function() {
+    up: function($el) {
       if (this.options.cycle) {
         if (this.index <= 0) {
           this.index = this.$nodes.length;
@@ -59,6 +53,7 @@
       }
 
       this.setActive();
+      $el.trigger('up');
     }
   };
 
@@ -70,7 +65,7 @@
     // by the user.
     var options = settings || {};
     this.options = $.extend({}, this.defaults, options);
-    this.options.keyMappings = $.extend({}, this.defaults.keyMappings, options.keyMappings);
+    this.options.keys = $.extend({}, this.defaults.keys, options.keys);
     this.options.activeClassName = '.' + this.options.activeClass;
 
     this.index = -1;
@@ -92,22 +87,22 @@
       useCache: true,
       cycle: false,
       activeClass: 'active',
-      // 38-up, 40-down
-      keyMappings: {
-        38: 'up',
-        40: 'down'
-      },
-      click: function($el) {
-        this.setActiveElement($el);
+      // 38: arrow up, 40: arrow down
+      keys: {
+        38: defaultEventHandlers.up,
+        40: defaultEventHandlers.down
       }
     },
 
     handleKeyDown: function(e) {
-      var handler = this.options.keyMappings[e.keyCode];
-      if (!handler) {
+      // Use event.which property to normalizes event.keyCode and event.charCode
+      var fn = this.options.keys[e.which];
+      if (!fn) {
         // No handler found for current keyCode.
         return;
       }
+
+      e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
       // If "useCache" isn't enabled, 
       // then query for DOM-nodes with the same selector.
@@ -118,12 +113,6 @@
       var $selected = this.$parent.find(this.options.activeClassName);
       if (this.index < 0) {
           this.index = $selected.index();
-      }
-
-      var fn = ($.isFunction(handler) ? handler : defaultEventHandlers[handler]);
-      if (!fn) {
-        // Could not find any function for the handler.
-        throw new Error('Could not find any function for keyCode: ' + e.keyCode);
       }
 
       fn.apply(this, [$selected, e]);
@@ -162,7 +151,7 @@
     // jQuery 1.7+ bind() calls on().
     // See line ~3360 in http://code.jquery.com/jquery-latest.js.         
     this.bind('click', function(e) {
-        defaultEventHandlers.click.apply(navigator, [$(this), e]);
+        navigator.setActiveElement($(this));
     });
 
     $parent
