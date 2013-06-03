@@ -66,16 +66,15 @@ $('ul#example li').keynavigator()
 Key handlers and custom settings:
 ```javascript
 $('ul#example li').keynavigator({
-  cycle: true, /* When hitting top/bottom - cycle */
-  useCache: false, /* Useful if elements are added to our list  */
-  activeClass: 'active-blue', /* Class to use on the active element */
+  cycle: true, /* Restart from top/bottom */
+  useCache: false, /* Useful if elements are added/removed  */
+  activeClass: 'active-blue', /* Class on the active element */
   keys: {
     /* Callback when key 'a' is pressed */
     65: function($el, e) {
       // 'this' - will be the KeyNavigator instance.
       // $el - the element
       // e - the event
-
       console.log('pressed "a" on', $el);
 
       // Create a new element and add it to the list.
