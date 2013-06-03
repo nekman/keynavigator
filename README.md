@@ -40,10 +40,7 @@ require(['keynavigator'], function($) {
  activeClass: {string} - The name of the class that should be used for the active element.
   - default: 'active'
  
- keys: {object}: Callback functions when a key is pressed.
-  - example: { 
-      65: function($el, e) { console.log('pressed', $el, e); }
-    }
+ keys: {object} (key: callback): Callback functions that executes when a key is pressed.
 
  tabindex: {number} - The tabindex that should be used on the parent element.
   - default: -1
@@ -52,7 +49,7 @@ require(['keynavigator'], function($) {
                        Useful if elements are added/removed from the DOM.
   - default: true
 ```
-<strong>Custom events</strong>
+<strong>Custom events</strong><br/>
 Subscribe to ```up``` and ```down``` events using:
 ```javascript
 $('ul#example li').keynavigator()
