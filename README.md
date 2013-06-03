@@ -40,7 +40,7 @@ require(['keynavigator'], function($) {
  activeClass: {string} - The name of the class that should be used for the active element.
   - default: 'active'
  
- keys: {object} (key: callback): Callback functions that executes when a key is pressed.
+ keys: {object} (keyCode: callback): Callback functions that executes when a key is pressed.
 
  tabindex: {number} - The tabindex that should be used on the parent element.
   - default: -1
