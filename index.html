@@ -28,23 +28,14 @@
         </ul>
       </header>
       <section>
-        <h1>
-<a name="keynavigator" class="anchor" href="#keynavigator"><span class="octicon octicon-link"></span></a>Keynavigator</h1>
-
-<p>Key navigaton plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
+        <p>Key navigaton plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br>
 Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul</code> or <code>table</code> elements.</p>
 
 <h3>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'selector'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">({</span><span class="nx">settings</span><span class="p">}</span> <span class="cm">/* optional */</span><span class="p">);</span>
-</pre></div>
-
-<h4>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h4>
-
-<p>Include keynavigator.js after having included jQuery (or Zepto):</p>
+<p>Include keynavigator.js after having included jQuery or Zepto:</p>
 
 <div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"keynavigator.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
@@ -53,12 +44,12 @@ Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul<
 <p>Start the keynavigator plugin.</p>
 
 <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">();</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">(</span><span class="cm">/* optional settings */</span><span class="p">);</span>
 <span class="p">});</span>  
 </pre></div>
 
 <h4>
-<a name="installation-using-requirejs" class="anchor" href="#installation-using-requirejs"><span class="octicon octicon-link"></span></a>Installation using RequireJS.</h4>
+<a name="requirejs" class="anchor" href="#requirejs"><span class="octicon octicon-link"></span></a>RequireJS</h4>
 
 <p>Include <a href="http://requirejs.org">RequireJS</a>.</p>
 
@@ -67,8 +58,8 @@ Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul<
 
 <p>Start the keynavigator plugin.</p>
 
-<div class="highlight"><pre><span class="nx">require</span><span class="p">([</span><span class="s1">'keynavigator'</span><span class="p">],</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">();</span>
+<div class="highlight"><pre><span class="nx">require</span><span class="p">([</span><span class="s1">'keynavigator'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">(</span><span class="cm">/* optional settings */</span><span class="p">);</span>
 <span class="p">});</span>  
 
 </pre></div>
@@ -76,26 +67,23 @@ Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul<
 <h4>
 <a name="settings" class="anchor" href="#settings"><span class="octicon octicon-link"></span></a>Settings</h4>
 
-<pre><code> cycle: {boolean} - if true, use cycle navigation
+<pre><code> cycle: {boolean} - If true, use cycle navigation
   - default: false     
-
- useCache: {boolean} - if false, run the selector on each keydown. 
-             Useful if elements are added/removed from the DOM.
-  - default: true  
 
  activeClass: {string} - The name of the class that should be used for the active element.
   - default: 'active'
 
- tabindex: {number} - the tabindex that should be used on the parent element.
-  - default: -1   
+ keys: {object} (keyCode: callback): Callback functions that executes when a key is pressed.
 
- keys: {object}: Callback functions when a key is pressed.
-  - example: { 
-      65: function($el, e) { console.log('pressed', $el, e); }
-    }
+ tabindex: {number} - The tabindex that should be used on the parent element.
+  - default: -1
+
+ useCache: {boolean} - If false, run the selector on each keydown. 
+                       Useful if elements are added/removed from the DOM.
+  - default: true
 </code></pre>
 
-<p><strong>Custom events</strong>
+<p><strong>Custom events</strong><br>
 Subscribe to <code>up</code> and <code>down</code> events using:</p>
 
 <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">()</span>
