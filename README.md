@@ -49,16 +49,55 @@ require(['keynavigator'], function($) {
                        Useful if elements are added/removed from the DOM.
   - default: true
 ```
+
 <strong>Custom events</strong><br/>
 Subscribe to ```up``` and ```down``` events using:
 ```javascript
 $('ul#example li').keynavigator()
-                  .on('up', function(e, $el) {
-                    console.log('Pressed up on', $el);
+                  .on('up', function(e) {
+                    console.log('Pressed up on', $(this));
                   })
-                  .on('down', function(e, $el) {
-                    console.log('Pressed down on', $el);
+                  .on('down', function(e) {
+                    console.log('Pressed down on', $(this));
                   });
+```
+
+<strong>Example with callbacks</strong><br/>
+Key handlers and custom settings:
+```javascript
+$('ul#example li').keynavigator({
+  cycle: true, /* When hitting top/bottom - cycle */
+  useCache: false, /* Useful if elements are added to our list  */
+  activeClass: 'active-blue', /* Class to use on the active element */
+  keys: {
+    /* Callback when key 'a' is pressed */
+    65: function($el, e) {
+      // 'this' - will be the KeyNavigator instance.
+      // $el - the element
+      // e - the event
+
+      console.log('pressed "a" on', $el);
+
+      // Create a new element and add it to the list.
+      $('<li>Appended</li>').insertAfter($el);
+      
+      this.setActive();
+    },
+
+    /* Callback when key 'd' is pressed */
+    68: function($el, e) { /* Key 'd' */
+      // 'this' - will be the KeyNavigator instance.
+      // $el - the element
+      // e - the event      
+      console.log('pressed "d" on', $el);
+      
+      // Remove the element.
+      $el.remove();
+
+      this.setActive();
+    }
+  }
+});
 ```
 #### Demos and examples
 Is available on the project web page - http://nekman.github.io/keynavigator
