@@ -8,12 +8,7 @@ Key navigaton plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://
 Makes it possible to use arrow keys (or any key) for navigation in eg. `ul` or `table` elements.
 
 ###Usage
-```javascript
-$('selector').keynavigator({settings} /* optional */);
-```
-
-####Installation
-Include keynavigator.js after having included jQuery (or Zepto):
+Include keynavigator.js after having included jQuery or Zepto:
 ```html
 <script src="jquery.js"></script>
 <script src="keynavigator.js"></script>
@@ -21,42 +16,41 @@ Include keynavigator.js after having included jQuery (or Zepto):
 Start the keynavigator plugin.
 ```javascript
 $(document).ready(function() {
-  $('ul#example li').keynavigator();
+  $('ul#example li').keynavigator(/* optional settings */);
 });  
 ```
 
-####Installation using RequireJS.
+####RequireJS
 Include <a href="http://requirejs.org">RequireJS</a>.
 ```html
 <script src="require.js"></script>
 ```
 Start the keynavigator plugin.
 ```javascript
-require(['keynavigator'], function() {
-  $('ul#example li').keynavigator();
+require(['keynavigator'], function($) {
+  $('ul#example li').keynavigator(/* optional settings */);
 });  
 
 ```
-
 ####Settings
 ```
- cycle: {boolean} - if true, use cycle navigation
+ cycle: {boolean} - If true, use cycle navigation
   - default: false     
- 
- useCache: {boolean} - if false, run the selector on each keydown. 
-             Useful if elements are added/removed from the DOM.
-  - default: true  
- 
+
  activeClass: {string} - The name of the class that should be used for the active element.
   - default: 'active'
- 
- tabindex: {number} - the tabindex that should be used on the parent element.
-  - default: -1   
  
  keys: {object}: Callback functions when a key is pressed.
   - example: { 
       65: function($el, e) { console.log('pressed', $el, e); }
     }
+
+ tabindex: {number} - The tabindex that should be used on the parent element.
+  - default: -1
+
+ useCache: {boolean} - If false, run the selector on each keydown. 
+                       Useful if elements are added/removed from the DOM.
+  - default: true
 ```
 <strong>Custom events</strong>
 Subscribe to ```up``` and ```down``` events using:
