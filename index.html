@@ -9,6 +9,89 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Keynavigator</title>
+
+    <style>
+      ul li {
+        list-style: none;
+      }
+      ul, table > tbody {
+        outline: none;        
+      }
+
+      .active-blue {
+        background-color: lightblue;
+      }
+      .active-yellow {
+        background-color: yellow;
+      }
+
+      .active {
+        background-color: #c30;
+        color: #fff;
+      }
+
+      .demo {
+        background-color:#fff;
+        box-shadow: 0 0 10px rgba(0,0,0,.1);
+        border-radius: 2px;
+        padding: 10px;
+        width:100%;        
+      }
+
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+    <script>
+      
+      require(['keynavigator'], function($) {
+        // Example #1
+        $('ul#example li').keynavigator();
+
+        // Example #2
+        $('ul#example1 li').keynavigator({ activeClass: 'active-yellow' })
+                          .on('up', function(e) {
+                            console.log('Pressed up on', $(this));
+                          })
+                          .on('down', function(e) {
+                            console.log('Pressed down on', $(this));
+                          });
+        
+        // Example #3
+        $('ul#example2 li').keynavigator({
+          cycle: true, /* When hitting top/bottom - cycle */
+          useCache: false, /* Useful if elements are added to our list  */
+          activeClass: 'active-blue', /* Class to use on the active element */
+          keys: {
+            /* Callback when key 'a' is pressed */
+            65: function($el, e) {
+              // 'this' - will be the KeyNavigator instance.
+              // $el - the element
+              // e - the event
+
+              console.log('pressed "a" on', $el);
+
+              // Create a new element and add it to the list.
+              $('<li>Appended</li>').insertAfter($el);
+              
+              this.setActive();
+            },
+
+            /* Callback when key 'd' is pressed */
+            68: function($el, e) { /* Key 'd' */
+              // 'this' - will be the KeyNavigator instance.
+              // $el - the element
+              // e - the event      
+              console.log('pressed "d" on', $el);
+              
+              // Remove the element.
+              $el.remove();
+
+              this.setActive();
+            }
+          }
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -50,6 +133,15 @@ Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul<
   <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">(</span><span class="cm">/* optional settings */</span><span class="p">);</span>
 <span class="p">});</span>  
 </pre></div>
+
+<p><strong>Demo</strong><br>
+<div class="highlight demo">  
+  <ul id="example">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+  </ul>
+</div>
 
 <h4>
 <a name="requirejs" class="anchor" href="#requirejs"><span class="octicon octicon-link"></span></a>RequireJS</h4>
@@ -97,7 +189,15 @@ Subscribe to <code>up</code> and <code>down</code> events using:</p>
                     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Pressed down on'</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
                   <span class="p">});</span>
 </pre></div>
-
+<p><strong>Demo - Custom events</strong><br>
+<p>Open the console and navigate with <code>up</code> and <code>down</code> arrow keys</p>
+<div class="highlight demo">  
+  <ul id="example1">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+  </ul>
+</div>
 <p><strong>Example with callbacks</strong><br>
 Key handlers and custom settings:</p>
 
@@ -134,7 +234,18 @@ Key handlers and custom settings:</p>
   <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
+<p><strong>Demo - Example with callbacks</strong><br>
+<p>Open the console and press <code>a</code> or <code>d</code></p>
+<div class="highlight demo">  
+  <ul id="example2">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+  </ul>
+</div>
       </section>
+
+      
     </div>
 
     <!-- FOOTER  -->
