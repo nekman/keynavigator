@@ -40,9 +40,13 @@
 
     </style>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
     <script>
-      
+      // Define jquery and return Zepto.
+      define('jquery', function() { 
+        return $; 
+      });
+
       require(['keynavigator'], function($) {
         // Example #1
         $('ul#example li').keynavigator();
