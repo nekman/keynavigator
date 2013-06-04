@@ -42,57 +42,60 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script>
     <script>
-      // Define jquery and return Zepto.
-      define('jquery', function() { 
-        return $; 
-      });
+      $(document).ready(function() {
 
-      require(['keynavigator'], function($) {
-        // Example #1
-        $('ul#example li').keynavigator();
+        // Define jquery and return Zepto.
+        define('jquery', function() { 
+          return $; 
+        });
 
-        // Example #2
-        $('ul#example1 li').keynavigator({ activeClass: 'active-yellow' })
-                          .on('up', function(e) {
-                            console.log('Pressed up on', $(this));
-                          })
-                          .on('down', function(e) {
-                            console.log('Pressed down on', $(this));
-                          });
-        
-        // Example #3
-        $('ul#example2 li').keynavigator({
-          cycle: true, /* When hitting top/bottom - cycle */
-          useCache: false, /* Useful if elements are added to our list  */
-          activeClass: 'active-blue', /* Class to use on the active element */
-          keys: {
-            /* Callback when key 'a' is pressed */
-            65: function($el, e) {
-              // 'this' - will be the KeyNavigator instance.
-              // $el - the element
-              // e - the event
+        require(['keynavigator'], function($) {
+          // Example #1
+          $('ul#example li').keynavigator();
 
-              console.log('pressed "a" on', $el);
+          // Example #2
+          $('ul#example1 li').keynavigator({ activeClass: 'active-yellow' })
+                            .on('up', function(e) {
+                              console.log('Pressed up on', $(this));
+                            })
+                            .on('down', function(e) {
+                              console.log('Pressed down on', $(this));
+                            });
+          
+          // Example #3
+          $('ul#example2 li').keynavigator({
+            cycle: true, /* When hitting top/bottom - cycle */
+            useCache: false, /* Useful if elements are added to our list  */
+            activeClass: 'active-blue', /* Class to use on the active element */
+            keys: {
+              /* Callback when key 'a' is pressed */
+              65: function($el, e) {
+                // 'this' - will be the KeyNavigator instance.
+                // $el - the element
+                // e - the event
 
-              // Create a new element and add it to the list.
-              $('<li>Appended</li>').insertAfter($el);
-              
-              this.setActive();
-            },
+                console.log('pressed "a" on', $el);
 
-            /* Callback when key 'd' is pressed */
-            68: function($el, e) { /* Key 'd' */
-              // 'this' - will be the KeyNavigator instance.
-              // $el - the element
-              // e - the event      
-              console.log('pressed "d" on', $el);
-              
-              // Remove the element.
-              $el.remove();
+                // Create a new element and add it to the list.
+                $('<li>Appended</li>').insertAfter($el);
+                
+                this.setActive();
+              },
 
-              this.setActive();
+              /* Callback when key 'd' is pressed */
+              68: function($el, e) { /* Key 'd' */
+                // 'this' - will be the KeyNavigator instance.
+                // $el - the element
+                // e - the event      
+                console.log('pressed "d" on', $el);
+                
+                // Remove the element.
+                $el.remove();
+
+                this.setActive();
+              }
             }
-          }
+          });
         });
       });
     </script>
