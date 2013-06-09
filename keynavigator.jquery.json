@@ -1,0 +1,38 @@
+{
+  "name": "keynavigator",
+  "version": "1.0.0",
+  "title": "Keynavigator",
+  "description": "Makes it possible to use arrow keys (or any key) for navigation in eg. ul or table elements.",
+  "keywords": [
+    "navigation",
+    "highlight",
+    "keyboard",
+    "table",
+    "list",
+    "ui"
+  ],  
+  "author": {
+    "name": "nekman (Nils Ekman)",
+    "url": "http://nekman.se"
+  },
+  "maintainers": [
+    {
+      "name": "nekman (Nils Ekman)",
+      "url": "http://nekman.se"
+    }
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "bugs": "https://github.com/nekman/keynavigator/issues",
+  "homepage": "http://nekman.github.io/keynavigator",
+  "demo": "http://nekman.github.io/keynavigator",
+  "docs": "http://nekman.github.io/keynavigator",
+  "download": "https://github.com/nekman/keynavigator/zipball/master",
+  "dependencies": {
+    "jquery": ">=1.7"
+  }
+}
