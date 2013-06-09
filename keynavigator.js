@@ -5,19 +5,21 @@
  */
 (function(root, factory) {
   'use strict';
-  // CommonJS
+  // CommonJS.
   if (typeof exports === 'object') {
      module.exports = factory(require('jquery'));
   } else if (typeof root.define === 'function' && root.define.amd) {
-    // AMD. Register as an anonymous module.
+    // AMD.
     // jQuery 1.7+ registers it self as a AMD module. 
     // If Zepto is used, define jquery and return Zepto eg:
     // 
-    //    define('jquery', window.Zepto);
+    //    define('jquery', function() {
+    //      return $;
+    //    });
     //
     define('keynavigator', ['jquery'], factory);
   } else {
-    // AMD isn't being used. Assume jQuery or Zepto are loaded from <script> tags.
+    // Assume jQuery or Zepto are loaded from <script> tags.
     factory(root.jQuery || root.Zepto);
   }
 }(this, function($) {
@@ -145,20 +147,26 @@
 
   $.fn.keynavigator = function(options) {
     var $parent = this.parent(),
+        focus = function() {
+          $parent.focus();
+        },
+        blur = function() {
+          $parent.blur();
+        },
         navigator = new KeyNavigator(this, $parent, options);
 
     // Use bind due to backwards compatibility. 
     // jQuery 1.7+ bind() calls on().
     // See line ~3360 in http://code.jquery.com/jquery-latest.js.         
-    this.bind('click', function(e) {
+    this.bind('click', function() {
         navigator.setActiveElement($(this));
     });
 
     $parent
       .bind('keydown', $.proxy(navigator.handleKeyDown, navigator))
-      .bind('click', function() {
-          $parent.focus();
-      });
+      .bind('click', focus)
+      .bind('mouseover', focus)
+      .bind('mouseout', blur);
 
     return this;
   };
