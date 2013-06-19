@@ -7,9 +7,9 @@ describe('Keynavigator', function() {
   var domino = require('domino'),
       $ = require('jquery'),
       html = '<ul>' +
-                '<li top=10 left=10 ><a href="#">Option 1</a></li>' +
-                '<li top=10 left=10 ><a href="#">Option 2</a></li>' +
-                '<li top=10 left=10 ><a href="#">Option 3</a></li>' +
+                '<li><a href="#">Option 1</a></li>' +
+                '<li><a href="#">Option 2</a></li>' +
+                '<li><a href="#">Option 3</a></li>' +
              '</ul>';
 
   beforeEach(function() {
@@ -28,10 +28,10 @@ describe('Keynavigator', function() {
 
     $.fn.position = function() {
       return {
-        left: $(this).attr('left'),
-        top: $(this).attr('top')
-      }
-    }
+        left: 10,
+        top: 10
+      };
+    };
   });
 
   var createKeyEvent = function(keyCode) {

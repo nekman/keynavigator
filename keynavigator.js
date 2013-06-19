@@ -28,7 +28,7 @@
    *
    * @param $nodes - jQuery nodes that should be watched.
    * @param $parent - The parent element.
-   * @param settings - custom settings.
+   * @param settings - Optional settings.
    */
   var KeyNavigator = function($nodes, $parent, settings)  {
     // Extend custom settings with default settings.
@@ -156,10 +156,13 @@
 
   // Default event handlers.
   // TODO: Refactor!
+  // TODO: Trigger
   var defaultEventHandlers = {
     down: function($el, cellPosition) {
-      var currentPosition = CellFactory.createFrom($el),
-          colCells = this.cellTable.columns[currentPosition.pos.left],
+      $el.trigger('down', [$el]);
+
+      var cell = CellFactory.createFrom($el),
+          colCells = this.cellTable.columns[cell.pos.left],
           colCell = colCells[cellPosition.rowIndex + 1];
 
       if (!colCell && this.options.cycle) {
@@ -170,12 +173,14 @@
         return;
       }
 
-      this.setActiveElement(colCell.$el);
+      this.setActive(colCell.$el);
     },
 
     up: function($el, cellPosition) {
-      var currentPosition = CellFactory.createFrom($el),
-          colCells = this.cellTable.columns[currentPosition.pos.left],
+      $el.trigger('up', [$el]);
+
+      var cell = CellFactory.createFrom($el),
+          colCells = this.cellTable.columns[cell.pos.left],
           colCell = colCells[cellPosition.rowIndex - 1];
 
       if (!colCell && this.options.cycle) {
@@ -186,13 +191,14 @@
         return;
       }
 
-      this.setActiveElement(colCell.$el);
-      $el.trigger('up', [$el]);
+      this.setActive(colCell.$el);
     },
 
     left: function($el, cellPosition) {
-      var currentPosition = CellFactory.createFrom($el),
-          rowCells = this.cellTable.rows[currentPosition.pos.top],
+      $el.trigger('left', [$el]);
+
+      var cell = CellFactory.createFrom($el),
+          rowCells = this.cellTable.rows[cell.pos.top],
           rowCell = rowCells[cellPosition.colIndex - 1];
 
       if (!rowCell && this.options.cycle) {
@@ -203,12 +209,14 @@
         return;
       }
 
-      this.setActiveElement(rowCell.$el);
+      this.setActive(rowCell.$el);
     },
 
     right: function($el, cellPosition) {
-      var currentPosition = CellFactory.createFrom($el),
-          rowCells = this.cellTable.rows[currentPosition.pos.top],
+      $el.trigger('right', [$el]);
+
+      var cell = CellFactory.createFrom($el),
+          rowCells = this.cellTable.rows[cell.pos.top],
           rowCell = rowCells[cellPosition.colIndex + 1];
 
       if (!rowCell && this.options.cycle) {
@@ -219,7 +227,7 @@
         return;
       }
 
-      this.setActiveElement(rowCell.$el);
+      this.setActive(rowCell.$el);
     }
   },
 
@@ -318,6 +326,10 @@
     },
 
     isSameColumn: function(cell, compareCell) {
+      if (!compareCell) {
+        throw 'cell';
+      }
+
       return cell.pos.left === compareCell.pos.left;
     },
 
@@ -325,7 +337,7 @@
       return cell.pos.top === compareCell.pos.top;
     },
 
-    isSame: function(cell, compareCell) {
+    isSame: function(cell, compareCell) {      
       return this.isSameColumn(cell, compareCell) && this.isSameRow(cell, compareCell);
     },
 
@@ -377,6 +389,8 @@
     defaults: {
       useCache: true,
       cycle: false,
+      activateOn: 'click',
+      parentFocusOn: 'click',
       activeClass: 'active',
       // default keys.
       keys: {
@@ -404,9 +418,8 @@
       }
 
       var $selected = this.$parent.find(this.tagName +'[class="'+ this.options.activeClass +'"]');
-
-      // One more try...
       if (!$selected.length) {
+        // One more try...
         $selected = this.$nodes.first();
       }
 
@@ -415,12 +428,24 @@
         return;
       }
 
-      var cell = this.cellTable.getCurrent($selected);
+      var cell;
+      try {
+        cell = this.cellTable.getCurrent($selected);
+      } catch (e) {
+        // Nothing to do.
+      }
+
+      if (!cell) {
+        // Could not find any cell. Try to rebuild the CellTable and try again...
+        this.reBuild();
+
+        cell = this.cellTable.getCurrent($selected);
+      }
 
       fn.apply(this, [$selected, cell, e]);
     },
 
-    setActiveElement: function($el) {
+    setActive: function($el) {
       // Remove the active class (from all nodes), 
       // add the active class to the selected node.
       this.$nodes.removeClass(this.options.activeClass);
@@ -442,10 +467,6 @@
     var $parent = this.parent(),
         navigator = new KeyNavigator(this, $parent, options);
 
-    this.on('click', function() {
-        navigator.setActiveElement($(this));
-    });
-
     // Need to wait until resizing  is done, so that we don't
     // rebuilding the cellTable more times than we need to.
     var resizing;
@@ -456,17 +477,22 @@
       }, 200);
     });
 
-    $parent
-      .on('keydown', $.proxy(navigator.handleKeyDown, navigator))
-      .on('click', function() {
+    $parent.on('keydown', $.proxy(navigator.handleKeyDown, navigator));
+
+    if (navigator.options.activateOn) {
+
+      this.on(navigator.options.activateOn, function() {
+          navigator.setActive($(this));
+      });
+
+      $parent.on(navigator.options.parentFocusOn, function() {
         $parent.focus();
       });
+    }
 
     return this;
   };
 
-  // Just return the $-function. 
-  // Needed (good practice) for AMD / UMD modules.
+  // Return the $-function.
   return $;
-
 }));
