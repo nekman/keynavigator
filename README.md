@@ -20,17 +20,6 @@ $(document).ready(function() {
 });  
 ```
 
-####RequireJS
-Include <a href="http://requirejs.org">RequireJS</a>.
-```html
-<script src="require.js"></script>
-```
-Start the keynavigator plugin.
-```javascript
-require(['keynavigator'], function($) {
-  $('ul#example li').keynavigator(/* optional settings */);
-});  
-```
 ###Documentation and examples
 Is available on the project web page - http://nekman.github.io/keynavigator
 
