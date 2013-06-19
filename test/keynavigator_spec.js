@@ -7,9 +7,9 @@ describe('Keynavigator', function() {
   var domino = require('domino'),
       $ = require('jquery'),
       html = '<ul>' +
-                '<li><a href="#">Option 1</a></li>' +
-                '<li><a href="#">Option 2</a></li>' +
-                '<li><a href="#">Option 3</a></li>' +
+                '<li top=10 left=10 ><a href="#">Option 1</a></li>' +
+                '<li top=10 left=10 ><a href="#">Option 2</a></li>' +
+                '<li top=10 left=10 ><a href="#">Option 3</a></li>' +
              '</ul>';
 
   beforeEach(function() {
@@ -25,6 +25,13 @@ describe('Keynavigator', function() {
         arg2 = arg2 || window.document;
         return new jQueryInit(arg1, arg2, rootjQuery);
     };
+
+    $.fn.position = function() {
+      return {
+        left: $(this).attr('left'),
+        top: $(this).attr('top')
+      }
+    }
   });
 
   var createKeyEvent = function(keyCode) {
@@ -41,54 +48,6 @@ describe('Keynavigator', function() {
                 .keynavigator('')
                 .keynavigator('a');
     });
-
-    it('handles any key', function() {
-      // Arrange      
-      var settings = {
-          keys: {
-            65: function($el) {
-            }
-          }
-      };
-
-      spyOn(settings.keys, '65');
-      var nodes = $('ul li', document).keynavigator(settings);
-
-      // Act
-      nodes.parent().focus().trigger(createKeyEvent(65));
-
-      // Assert
-      expect(nodes.first().hasClass('activeClass')).toBe(false);
-      expect(settings.keys['65']).toHaveBeenCalled();
-    });
-  });
-
-  describe('Events', function() {
-
-    it('triggers custom up/down events', function() {
-      // Arrange
-      var methods = {
-        down: $.noop,
-        up: $.noop
-      };
-
-      spyOn(methods, 'down');
-      spyOn(methods, 'up');
-
-      var nodes = $('ul li', document)
-          .on('down', methods.down)
-          .on('up', methods.up)
-          .keynavigator();
-
-      // Act
-      nodes.trigger(arrowDownEvent);
-      nodes.trigger(arrowUpEvent);
-
-      // Assert
-      expect(methods.down).toHaveBeenCalled();
-      expect(methods.up).toHaveBeenCalled();
-    });
-
   });
 
   describe('Tabindex', function() {
@@ -109,66 +68,11 @@ describe('Keynavigator', function() {
 
   });
 
-  describe('Cache', function() {
-
-    describe('is enabled', function() {
-
-      it('should not reuse the selector on navigation', function(){
-        var keynavigator,
-            expectedElementLength = 3,
-        nodes = $('ul li', document).keynavigator({
-          activeClass: 'activeClass',
-          keys: {
-            37: function() {
-              // Capture current instance of keynavigator.
-              keynavigator = this;
-            }
-          }
-        });
-
-        nodes.last().trigger(createKeyEvent('37'));
-        nodes.parent().append(document.createElement('li'))
-                      .focus()
-                      .trigger(arrowDownEvent);
-
-        // Verify that the keynavigator.$nodes don't have been updated.
-        expect(keynavigator.$nodes.length).toBe(expectedElementLength);
-      });
-    });
-
-    describe('is not enabled', function() {
-
-      it('should reuse the selector on navigation', function() {
-        var keynavigator,
-            expectedElementLength = 4,
-        nodes = $('ul li', document).keynavigator({
-          activeClass: 'activeClass',
-          useCache: false,
-          keys: {
-            37: function() {
-              // Capture current instance of keynavigator.
-              keynavigator = this;
-            }
-          }
-        });
-
-        nodes.last().trigger(createKeyEvent('37'));
-        nodes.parent().append(document.createElement('li'))
-                      .focus()
-                      .trigger(arrowDownEvent);
-
-        // Verify that the keynavigator.$nodes has been updated.
-        expect(keynavigator.$nodes.length).toBe(expectedElementLength);
-      });
-    });
-
-  });
-
   describe('Navigation', function() {
 
     it('should handle arrow down', function() {
       // Arrange
-      var nodes = $('ul li').keynavigator({
+      var nodes = $('ul li', document).keynavigator({
         activeClass: 'activeClass'
       });
 
@@ -178,37 +82,6 @@ describe('Keynavigator', function() {
 
       // Assert    
       expect(nodes[1].className).toBe('activeClass');
-    });
-
-    it('should handle arrow up', function() {
-      // Arrange
-      var nodes = $('ul li').keynavigator({
-        activeClass: 'activeClass'
-      });
-
-      nodes.last().trigger('click');
-
-      // Act    
-      nodes.parent().focus().trigger(arrowUpEvent);
-
-      // Assert    
-      expect(nodes[1].className).toBe('activeClass');
-    });
-
-    it('should handle cycle if enabled', function() {
-      // Arrange
-      var nodes = $('ul li').keynavigator({
-        activeClass: 'activeClass',
-        cycle: true
-      });
-
-      nodes.last().trigger('click');
-
-      // Act    
-      nodes.parent().focus().trigger(arrowDownEvent);
-
-      // Assert    
-      expect(nodes[0].className).toBe('activeClass');
     });
   });
 
