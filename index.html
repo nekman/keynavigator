@@ -1,264 +1,461 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Keynavigator : Keynavigation plugin for jQuery/Zepto." />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keynavigator</title>
 
+
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" 
+    rel="stylesheet" media="screen">
+    
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <style>
-      ul li {
-        list-style: none;
-      }
-      ul, table > tbody {
-        outline: none;        
+      body {
+        padding: 60px;
       }
 
-      .active-blue {
-        background-color: lightblue;
+      ul, table > tbody tr, tbody {
+         outline: none;
       }
-      .active-yellow {
-        background-color: yellow;
+
+      ul.nav.nav-pills li {
+        margin: .8em;
+      }
+
+      #example2.nav-tabs.nav-stacked > li > a {
+        border: none !important;
+      }
+
+      li a:hover {
+        background: none !important;
+        border: none;
       }
 
       .active {
-        background-color: #c30;
-        color: #fff;
+        background: #69f;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
       }
 
-      .demo {
-        background-color:#fff;
-        box-shadow: 0 0 10px rgba(0,0,0,.1);
-        border-radius: 2px;
-        padding: 10px;
-        width:100%;        
-      }
-
-    </style>
+    </style>    
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script>
-      $(document).ready(function() {
+      require(['keynavigator'], function($) {
 
-        require(['keynavigator'], function($) {
-          // Example #1
-          $('ul#example li').keynavigator();
-
-          // Example #2
-          $('ul#example1 li').keynavigator({ activeClass: 'active-yellow' })
-                            .on('up', function(e) {
-                              console.log('Pressed up on', $(this));
-                            })
-                            .on('down', function(e) {
-                              console.log('Pressed down on', $(this));
-                            });
-          
-          // Example #3
-          $('ul#example2 li').keynavigator({
-            cycle: true, /* When hitting top/bottom - cycle */
-            useCache: false, /* Useful if elements are added to our list  */
-            activeClass: 'active-blue', /* Class to use on the active element */
-            keys: {
-              /* Callback when key 'a' is pressed */
-              65: function($el, e) {
-                // 'this' - will be the KeyNavigator instance.
-                // $el - the element
-                // e - the event
-
-                console.log('pressed "a" on', $el);
-
-                // Create a new element and add it to the list.
-                $('<li>Appended</li>').insertAfter($el);
-                
-                this.setActive();
-              },
-
-              /* Callback when key 'd' is pressed */
-              68: function($el, e) { /* Key 'd' */
-                // 'this' - will be the KeyNavigator instance.
-                // $el - the element
-                // e - the event      
-                console.log('pressed "d" on', $el);
-                
-                // Remove the element.
-                $el.remove();
-
-                this.setActive();
-              }
-            }
-          });
+        $('table#example4 > tbody tr').keynavigator({
+          cycle: true
         });
+
+        $('table#example5 > tbody td').keynavigator({
+          cycle: true,
+          activateOn: 'click',
+          parentFocusOn: 'mouseover'
+        });
+
+        $('ul.nav.nav-pills li').keynavigator({
+          cycle: true
+        });
+
+        $('ul#example3 li').keynavigator({ activeClass: 'alert-success' })
+                          .on('up', function(e) {
+                            console.log('Pressed arrow up on', this);
+                          })
+                          .on('left', function(e) {
+                            console.log('Pressed arrow left on', this);
+                          });
+        
+        $('ul#example2 li').keynavigator({
+          cycle: true, /* When hitting top/bottom - cycle */
+          activeClass: 'alert-error',
+          keys: {
+            /* Callback when key 'escape' is pressed.
+             * here, represented as its key code.
+             * 'escape' could be used instead of '27'.
+             */
+            27: function($el, cellIndex, e) {
+              // 'this' - will be the KeyNavigator instance.
+              // $el - the element
+              // cellIndex - contains the row and column index.
+              // e - the event
+              console.log('pressed ESC!', arguments);
+            },
+
+            /* Callback when key 'a' is pressed */
+            a: function($el, cellIndex, e) {    
+              console.log('pressed "a"', arguments);
+            },
+
+            /* Callback when key 'd' is pressed */
+            d: function($el, cellIndex, e) { /* Key 'd' */    
+              console.log('pressed "d"', arguments);
+            }
+          }
+        });        
       });
     </script>
   </head>
-
   <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/nekman/keynavigator">View on GitHub</a>
+    <div class="wrapper">
+      <header>
+        <h1>Keynavigator</h1>
 
-          <h1 id="project_title">Keynavigator</h1>
-          <h2 id="project_tagline">Keynavigation plugin for jQuery/Zepto.</h2>
+        <p class="view"><a href="https://github.com/nekman/keynavigator">View the Project on GitHub <small>nekman/keynavigator</small></a></p>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/nekman/keynavigator/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/nekman/keynavigator/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+      </header>
+      <section>
         <p>Key navigaton plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
 <br>
 Makes it possible to use arrow keys (or any key) for navigation in eg. <code>ul</code> or <code>table</code> elements.</p>
 
-<h3>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
+<hr/>
+<h2>Usage</h2>
 
-<p>Include keynavigator.js after having included jQuery or Zepto:</p>
-
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"keynavigator.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-</pre></div>
-
-<p>Start the keynavigator plugin.</p>
-
-<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">(</span><span class="cm">/* optional settings */</span><span class="p">);</span>
-<span class="p">});</span>  
-</pre></div>
-
-<p><strong>Demo</strong><br>
-<div class="highlight demo">  
-  <ul id="example">
-    <li>Item 1</li>
-    <li>Item 2</li>
-    <li>Item 3</li>
-  </ul>
-</div>
-
-<h4>
-<a name="requirejs" class="anchor" href="#requirejs"><span class="octicon octicon-link"></span></a>RequireJS</h4>
-
-<p>Include <a href="http://requirejs.org">RequireJS</a>.</p>
-
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"require.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-</pre></div>
+<p>Include <strong>keynavigator.js</strong> after having included jQuery or Zepto:</p>
+<em>Copy the script includes for quick start</em>
+<pre class="prettyprint lang-html">
+&lt;script src="http://code.jquery.com/jquery-latest.min.js"&gt;&lt;/script&gt;
+&lt;script src="http://nekman.github.io/keynavigator/keynavigator.js"&gt;&lt;/script&gt;
+</pre>
 
 <p>Start the keynavigator plugin.</p>
 
-<div class="highlight"><pre><span class="nx">require</span><span class="p">([</span><span class="s1">'keynavigator'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">(</span><span class="cm">/* optional settings */</span><span class="p">);</span>
-<span class="p">});</span>  
+<pre class="prettyprint lang-javascript">
+$(document).ready(function() {
+  $('ul#example li').keynavigator(/* optional settings */);
+});  
+</pre>
+<h4>RequireJS</h4>
+<p>Optional <a href="http://requirejs.org">RequireJS</a> usage.
+<p>Include RequireJS:</p>
 
-</pre></div>
+<pre class="prettyprint lang-html">
+&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"&gt;&lt;/script&gt;
+</pre>
 
-<h4>
-<a name="settings" class="anchor" href="#settings"><span class="octicon octicon-link"></span></a>Settings</h4>
+<p>Start the keynavigator plugin.</p>
+<pre class="prettyprint lang-javascript">
+require(['keynavigator'], function($) {
+  $('ul#example li').keynavigator(/* optional settings */);
+});  
+</pre>
 
-<pre><code> cycle: {boolean} - If true, use cycle navigation
+<hr/>
+<h3>Optional settings</h3>
+<p>Brief explanation of the different settings. See the code examples bellow for more details.</p>
+<pre class="text-large"><code><strong>cycle</strong>: {boolean} - If true, use cycle navigation
   - default: false     
 
- activeClass: {string} - The name of the class that should be used for the active element.
+ <strong>activeClass</strong>: {string} - The name of the class that should be used for the active element.
   - default: 'active'
 
- keys: {object} (keyCode: callback): Callback functions that executes when a key is pressed.
+ <strong>keys</strong>: {object} (keyCode/keyName: callback): - Callback functions that executes when a key is pressed.
 
- tabindex: {number} - The tabindex that should be used on the parent element.
+ <strong>tabindex</strong>: {number} - The tabindex that should be used on the parent element.
   - default: -1
 
- useCache: {boolean} - If false, run the selector on each keydown. 
+ <strong>useCache</strong>: {boolean} - If false, run the selector on each keydown. 
                        Useful if elements are added/removed from the DOM.
   - default: true
+
+ <strong>activateOn</strong>: {string} - jQuery events (separated by space) that activates the
+                                         key navigation.
+  - default: 'click'
+
+ <strong>parentFocusOn</strong>: {string} - jQuery events (separated by space) that sets the focus on the
+                                            parent to enable key navigation.
+  - default: 'click'
+
 </code></pre>
 
-<p><strong>Custom events</strong><br>
-Subscribe to <code>up</code> and <code>down</code> events using:</p>
+<hr/>
+<h2>Examples</h2>
 
-<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">()</span>
-                  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'up'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Pressed up on'</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
-                  <span class="p">})</span>
-                  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'down'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Pressed down on'</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
-                  <span class="p">});</span>
-</pre></div>
-<p><strong>Demo - Custom events</strong><br>
-<p>Open the console and navigate with <code>up</code> and <code>down</code> arrow keys</p>
-<div class="highlight demo">  
-  <ul id="example1">
-    <li>Item 1</li>
-    <li>Item 2</li>
-    <li>Item 3</li>
+<div class="alert alert-block">  
+  <h4>Warning!</h4>
+  This plugin relies on element position.<br/>
+  If you change element position (eg by adding CSS-properties like padding or margin) the plugin will not work as expected.
+</div>
+
+<h4>Example 1 (resize the window)</h4>
+<p>Re-arrange the <code>li</code> elements by resizing the browser window.</p>
+<ul class="nav nav-pills">
+    <li>
+      <a href="#link" class="">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+    <li>
+      <a href="#link">Navigation Item</a>
+    </li>
+  </ul>
+
+<p>Code:</p>
+<pre class="prettyprint lang-javascript">
+$('ul.nav.nav-pills li').keynavigator({
+  cycle: true
+});
+</pre>
+
+<hr/>
+
+<h4>Example 2</h4>
+<p>Open the console and press <strong>a</strong>, <strong>d</strong> or <strong>ESC</strong> key.</p>
+<div>
+  <ul class="nav nav-tabs nav-stacked" id="example2">
+    <li><a href="#link">Option 1</a></li>
+    <li><a href="#link">Option 2</a></li>
+    <li><a href="#link">Option 3</a></li>
+  </ul>
+
+<pre class="prettyprint lang-javascript">
+$('ul#example2 li').keynavigator({
+  cycle: true, /* When hitting top/bottom - cycle */
+  activeClass: 'alert-error',
+  keys: {
+    /* Callback when key 'escape' is pressed.
+     * here, represented as its key code.
+     * 'escape' could be used instead of '27'.
+     */
+    27: function($el, cellIndex, e) {
+      // 'this' - will be the KeyNavigator instance.
+      // $el - the element
+      // cellIndex - contains the row and column index.
+      // e - the event
+      console.log('pressed ESC!', arguments);
+    },
+
+    /* Callback when key 'a' is pressed */
+    a: function($el, cellIndex, e) {    
+      console.log('pressed "a"', arguments);
+    },
+
+    /* Callback when key 'd' is pressed */
+    d: function($el, cellIndex, e) { /* Key 'd' */    
+      console.log('pressed "d"', arguments);
+    }
+  }
+});
+</pre>
+</div>
+
+<hr/>
+
+<h4>Example 3</h4>
+<p>Subscribe to <code>up</code>, <code>down</code>, <code>right</code> and <code>left</code> events.</p>
+<p>Open the console and press <strong>arrow-up</strong> or <strong>arrow-left</strong>:</p>
+<div>
+  <ul class="nav nav-tabs nav-stacked" id="example3">
+    <li><a href="#link">Option 1</a></li>
+    <li><a href="#link">Option 2</a></li>
+    <li><a href="#link">Option 3</a></li>
   </ul>
 </div>
-<p><strong>Example with callbacks</strong><br>
-Key handlers and custom settings:</p>
 
-<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'ul#example li'</span><span class="p">).</span><span class="nx">keynavigator</span><span class="p">({</span>
-  <span class="nx">cycle</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="cm">/* Restart from top/bottom */</span>
-  <span class="nx">useCache</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span> <span class="cm">/* Useful if elements are added/removed  */</span>
-  <span class="nx">activeClass</span><span class="o">:</span> <span class="s1">'active-blue'</span><span class="p">,</span> <span class="cm">/* Class on the active element */</span>
-  <span class="nx">keys</span><span class="o">:</span> <span class="p">{</span>
-    <span class="cm">/* Callback when key 'a' is pressed */</span>
-    <span class="mi">65</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// 'this' - will be the KeyNavigator instance.</span>
-      <span class="c1">// $el - the element</span>
-      <span class="c1">// e - the event</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'pressed "a" on'</span><span class="p">,</span> <span class="nx">$el</span><span class="p">);</span>
+<p>Code:</p>
+<pre class="prettyprint lang-javascript">
+$('ul#example3 li').keynavigator({ activeClass: 'alert-success' })
+        .on('up', function(e) {
+          console.log('Pressed arrow up on', this);
+        })
+        .on('left', function(e) {
+          console.log('Pressed arrow left on', this);
+        });
+</pre>
 
-      <span class="c1">// Create a new element and add it to the list.</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">'&lt;li&gt;Appended&lt;/li&gt;'</span><span class="p">).</span><span class="nx">insertAfter</span><span class="p">(</span><span class="nx">$el</span><span class="p">);</span>
+<hr/>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">setActive</span><span class="p">();</span>
-    <span class="p">},</span>
+<h4>Example 4</h4>
+<p>Using keynavigation in a <code>table &gt; tbody tr</code> to navigate in rows.</p>
 
-    <span class="cm">/* Callback when key 'd' is pressed */</span>
-    <span class="mi">68</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* Key 'd' */</span>
-      <span class="c1">// 'this' - will be the KeyNavigator instance.</span>
-      <span class="c1">// $el - the element</span>
-      <span class="c1">// e - the event      </span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'pressed "d" on'</span><span class="p">,</span> <span class="nx">$el</span><span class="p">);</span>
+  <table class="table" id="example4">
+    <thead>
+      <tr>
+        <th>Column 1</th>
+        <th>Column 2</th>
+        <th>Column 3</th>
+        <th>Column 4</th>
+        <th>Column 5</th>
+      </tr>
+    </thead>
 
-      <span class="c1">// Remove the element.</span>
-      <span class="nx">$el</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+    <tbody >
+      <tr>
+        <td>Row 1</td>
+        <td>Row 1</td>
+        <td>Row 1</td>
+        <td>Row 1</td>
+        <td>Row 1</td>
+      </tr>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">setActive</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-<p><strong>Demo - Example with callbacks</strong><br>
-<p>Open the console and press <code>a</code> or <code>d</code></p>
-<div class="highlight demo">  
-  <ul id="example2">
-    <li>Item 1</li>
-    <li>Item 2</li>
-    <li>Item 3</li>
-  </ul>
+      <tr>
+        <td>Row 2</td>
+        <td>Row 2</td>
+        <td>Row 2</td>
+        <td>Row 2</td>
+        <td>Row 2</td>
+      </tr>
+
+      <tr>
+        <td>Row 3</td>
+        <td>Row 3</td>
+        <td>Row 3</td>
+        <td>Row 3</td>
+        <td>Row 3</td>
+      </tr>
+
+      <tr>
+        <td>Row 4</td>
+        <td>Row 4</td>
+        <td>Row 4</td>
+        <td>Row 4</td>
+        <td>Row 4</td>
+      </tr>
+
+      <tr>
+        <td>Row 5</td>
+        <td>Row 5</td>
+        <td>Row 5</td>
+        <td>Row 5</td>
+        <td>Row 5</td>
+      </tr>
+    </tbody>
+  </table>
+
+<p>Code:</p>
+<pre class="prettyprint lang-javascript">
+$('table#example4 > tbody tr').keynavigator({
+  cycle: true
+});
+</pre>
+
+<hr/>
+<h4>Example 5</h4>
+<p>Using keynavigation in a <code>table tbody &gt; td</code> to navigate in cells.</p>
+  <table class="table" id="example5">
+    <thead>
+      <tr>
+        <th>Column 1</th>
+        <th>Column 2</th>
+        <th>Column 3</th>
+        <th>Column 4</th>
+        <th>Column 5</th>
+      </tr>
+    </thead>
+
+    <tbody >
+      <tr>
+        <td>Row 1</td>
+        <td>Row 1</td>
+        <td>Row 1</td>
+        <td>Row 1</td>
+        <td>Row 1</td>
+      </tr>
+
+      <tr>
+        <td>Row 2</td>
+        <td>Row 2</td>
+        <td>Row 2</td>
+        <td>Row 2</td>
+        <td>Row 2</td>
+      </tr>
+
+      <tr>
+        <td>Row 3</td>
+        <td>Row 3</td>
+        <td>Row 3</td>
+        <td>Row 3</td>
+        <td>Row 3</td>
+      </tr>
+
+      <tr>
+        <td>Row 4</td>
+        <td>Row 4</td>
+        <td>Row 4</td>
+        <td>Row 4</td>
+        <td>Row 4</td>
+      </tr>
+
+      <tr>
+        <td>Row 5</td>
+        <td>Row 5</td>
+        <td>Row 5</td>
+        <td>Row 5</td>
+        <td>Row 5</td>
+      </tr>
+    </tbody>
+  </table>
+
+<p>Code:</p>
+<pre class="prettyprint lang-javascript">
+$('table#example5 > tbody td').keynavigator({
+  cycle: true,
+  activateOn: 'click',
+  parentFocusOn: 'mouseover'
+});
+</pre>
+
+</section>
+
 </div>
-      </section>
 
-      
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Keynavigator maintained by <a href="https://github.com/nekman">nekman</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+<a href="https://github.com/nekman/keynavigator"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
     
-
   </body>
 </html>
