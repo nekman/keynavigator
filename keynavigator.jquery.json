@@ -1,8 +1,8 @@
 {
   "name": "keynavigator",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "title": "Keynavigator",
-  "description": "Makes it possible to use arrow keys (or any key) for navigation in eg. ul or table elements.",
+  "description": "Makes it possible to use arrow keys (or any key) for navigation in eg. ul or table elements. See the demo for more information.",
   "keywords": [
     "navigation",
     "highlight",
@@ -31,7 +31,7 @@
   "homepage": "http://nekman.github.io/keynavigator",
   "demo": "http://nekman.github.io/keynavigator",
   "docs": "http://nekman.github.io/keynavigator",
-  "download": "https://github.com/nekman/keynavigator/zipball/master",
+  "download": "https://raw.github.com/nekman/keynavigator/master/keynavigator.js",
   "dependencies": {
     "jquery": ">=1.7"
   }
