@@ -160,7 +160,7 @@
   /*
    * Utility for converting a jQuery position to a {cell} object.
    */
-  CellFactory = {
+  var CellFactory = {
     createFrom: function($el) {
       var position = $el.position();
 
