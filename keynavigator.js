@@ -26,7 +26,7 @@
   /*
    * KeyNavigator
    *
-   * @param $nodes - jQuery nodes that should be watched.
+   * @param $nodes - jQuery nodes.
    * @param $parent - The parent element.
    * @param settings - Optional settings.
    */
@@ -39,7 +39,10 @@
     this.options = $.extend({}, this.defaults, options);
     this.options.keys = $.extend({}, this.defaults.keys, options.keys);
 
-    this.tagName = $nodes.prop('tagName');
+    if (this.options.removeOutline) {
+      $parent.css({ outline: 'none' });
+    }
+
     this.$nodes = $nodes;
 
     // If the parent node doesn't have a tabindex attribute, then add one.
@@ -154,87 +157,10 @@
       222: 'single_quote'
   };
 
-  // Default event handlers.
-  // TODO: Refactor!
-  // TODO: Trigger
-  var defaultEventHandlers = {
-    down: function($el, cellPosition) {
-      $el.trigger('down', [$el]);
-
-      var cell = CellFactory.createFrom($el),
-          colCells = this.cellTable.columns[cell.pos.left],
-          colCell = colCells[cellPosition.rowIndex + 1];
-
-      if (!colCell && this.options.cycle) {
-        colCell = colCells[0];
-      }
-
-      if (!colCell) {
-        return;
-      }
-
-      this.setActive(colCell.$el);
-    },
-
-    up: function($el, cellPosition) {
-      $el.trigger('up', [$el]);
-
-      var cell = CellFactory.createFrom($el),
-          colCells = this.cellTable.columns[cell.pos.left],
-          colCell = colCells[cellPosition.rowIndex - 1];
-
-      if (!colCell && this.options.cycle) {
-        colCell = colCells[colCells.length - 1];
-      }
-
-      if (!colCell) {
-        return;
-      }
-
-      this.setActive(colCell.$el);
-    },
-
-    left: function($el, cellPosition) {
-      $el.trigger('left', [$el]);
-
-      var cell = CellFactory.createFrom($el),
-          rowCells = this.cellTable.rows[cell.pos.top],
-          rowCell = rowCells[cellPosition.colIndex - 1];
-
-      if (!rowCell && this.options.cycle) {
-        rowCell = rowCells[rowCells.length - 1];
-      }
-
-      if (!rowCell) {
-        return;
-      }
-
-      this.setActive(rowCell.$el);
-    },
-
-    right: function($el, cellPosition) {
-      $el.trigger('right', [$el]);
-
-      var cell = CellFactory.createFrom($el),
-          rowCells = this.cellTable.rows[cell.pos.top],
-          rowCell = rowCells[cellPosition.colIndex + 1];
-
-      if (!rowCell && this.options.cycle) {
-        rowCell = rowCells[0];
-      }
-
-      if (!rowCell) {
-        return;
-      }
-
-      this.setActive(rowCell.$el);
-    }
-  },
-
   /*
    * Utility for converting a jQuery position to a {cell} object.
    */
-  CellFactory = {
+  var CellFactory = {
     createFrom: function($el) {
       var position = $el.position();
 
@@ -259,7 +185,6 @@
    */
   CellTable = function($nodes) {
     this.table = this.buildTable($nodes);
-
     this.rows = this.buildRows();
     this.columns = this.buildColumns();
   };
@@ -337,7 +262,7 @@
       return cell.pos.top === compareCell.pos.top;
     },
 
-    isSame: function(cell, compareCell) {      
+    isSame: function(cell, compareCell) {
       return this.isSameColumn(cell, compareCell) && this.isSameRow(cell, compareCell);
     },
 
@@ -388,27 +313,108 @@
     // Default settings
     defaults: {
       useCache: true,
-      cycle: false,
+      cycle: true,
       activateOn: 'click',
       parentFocusOn: 'click',
       activeClass: 'active',
-      // default keys.
+      removeOutline: true,
+      // Default keys.
       keys: {
-        up_arrow: defaultEventHandlers.up,
-        down_arrow: defaultEventHandlers.down,
-        left_arrow: defaultEventHandlers.left,
-        right_arrow: defaultEventHandlers.right
+        up_arrow: 'up',
+        down_arrow: 'down',
+        left_arrow: 'left',
+        right_arrow: 'right'
       }
+    },
+
+    move: function(info) {
+      var cells = info.cells[info.cellPosition],
+          cell = cells[info.index];
+
+      if (!cell && this.options.cycle) {
+        cell = cells[info.firstIndex ? 0 : cells.length - 1];
+      }
+
+      if (!cell) {
+        return;
+      }
+
+      this.setActive(cell.$el);
+    },
+
+    down: function($el, cellIndex) {
+      $el.trigger('down', [$el]);
+
+      var colCells = this.cellTable.columns;
+
+      this.move({
+        cellPosition: CellFactory.createFrom($el).pos.left,
+        index: cellIndex.rowIndex + 1,
+        cells: colCells,
+        firstIndex: true
+      });
+    },
+
+    up: function($el, cellIndex) {
+      $el.trigger('up', [$el]);
+
+      var colCells = this.cellTable.columns;
+
+      this.move({
+        cellPosition: CellFactory.createFrom($el).pos.left,
+        index: cellIndex.rowIndex - 1,
+        cells: colCells
+      });
+    },
+
+    left: function($el, cellIndex) {
+      $el.trigger('left', [$el]);
+
+      var rowCells = this.cellTable.rows;
+
+      this.move({
+        cellPosition: CellFactory.createFrom($el).pos.top,
+        index: cellIndex.colIndex - 1,
+        cells: rowCells
+      });
+    },
+
+    right: function($el, cellIndex) {
+      $el.trigger('right', [$el]);
+
+      var rowCells = this.cellTable.rows;
+
+      this.move({
+        cellPosition: CellFactory.createFrom($el).pos.top,
+        index: cellIndex.colIndex + 1,
+        cells: rowCells,
+        firstIndex: true
+      });
+    },
+
+    findCell: function($selected) {
+      try {
+        return this.cellTable.getCurrent($selected);
+      } catch (ex) {
+        // Nothing to do.
+      }
+
+      // Could not find any cell. Try to rebuild the CellTable and try again...
+      this.reBuild();
+
+      return this.cellTable.getCurrent($selected);
     },
 
     handleKeyDown: function(e) {
       // Use event.which property to normalizes event.keyCode and event.charCode.
       var fn = this.options.keys[KeyNavigator.keys[e.which]] || this.options.keys[e.which];
+
       if (!fn) {
         // No handler found for current keyCode.
         return;
       }
 
+      //IE: http://stackoverflow.com/questions/1000597/event-preventdefault-function-not-working-in-ie
       e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
       // If 'useCache' isn't enabled, 
@@ -417,7 +423,7 @@
         this.reBuild();
       }
 
-      var $selected = this.$parent.find(this.tagName +'[class="'+ this.options.activeClass +'"]');
+      var $selected = this.$parent.find('.' + this.options.activeClass);
       if (!$selected.length) {
         // One more try...
         $selected = this.$nodes.first();
@@ -428,18 +434,12 @@
         return;
       }
 
-      var cell;
-      try {
-        cell = this.cellTable.getCurrent($selected);
-      } catch (e) {
-        // Nothing to do.
-      }
+      var cell = this.findCell($selected),
+          //TODO: Should be fixed.
+          navigationHandle = this[fn];
 
-      if (!cell) {
-        // Could not find any cell. Try to rebuild the CellTable and try again...
-        this.reBuild();
-
-        cell = this.cellTable.getCurrent($selected);
+      if (navigationHandle) {
+        return navigationHandle.apply(this, [$selected, cell, e]);
       }
 
       fn.apply(this, [$selected, cell, e]);
@@ -480,11 +480,12 @@
     $parent.on('keydown', $.proxy(navigator.handleKeyDown, navigator));
 
     if (navigator.options.activateOn) {
-
       this.on(navigator.options.activateOn, function() {
           navigator.setActive($(this));
       });
+    }
 
+    if (navigator.options.parentFocusOn) {
       $parent.on(navigator.options.parentFocusOn, function() {
         $parent.focus();
       });
