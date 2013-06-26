@@ -313,7 +313,7 @@
     // Default settings
     defaults: {
       useCache: true,
-      cycle: false,
+      cycle: true,
       activateOn: 'click',
       parentFocusOn: 'click',
       activeClass: 'active',
@@ -392,6 +392,19 @@
       });
     },
 
+    findCell: function($selected) {
+      try {
+        return this.cellTable.getCurrent($selected);
+      } catch (ex) {
+        // Nothing to do.
+      }
+
+      // Could not find any cell. Try to rebuild the CellTable and try again...
+      this.reBuild();
+
+      return this.cellTable.getCurrent($selected);
+    },
+
     handleKeyDown: function(e) {
       // Use event.which property to normalizes event.keyCode and event.charCode.
       var fn = this.options.keys[KeyNavigator.keys[e.which]] || this.options.keys[e.which];
@@ -401,6 +414,7 @@
         return;
       }
 
+      //IE: http://stackoverflow.com/questions/1000597/event-preventdefault-function-not-working-in-ie
       e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
       // If 'useCache' isn't enabled, 
@@ -420,21 +434,10 @@
         return;
       }
 
-      var cell;
-      try {
-        cell = this.cellTable.getCurrent($selected);
-      } catch (ex) {
-        // Nothing to do.
-      }
+      var cell = this.findCell($selected),
+          //TODO: Should be fixed.
+          navigationHandle = this[fn];
 
-      if (!cell) {
-        // Could not find any cell. Try to rebuild the CellTable and try again...
-        this.reBuild();
-
-        cell = this.cellTable.getCurrent($selected);
-      }
-
-      var navigationHandle = this[fn];
       if (navigationHandle) {
         return navigationHandle.apply(this, [$selected, cell, e]);
       }
