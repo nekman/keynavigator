@@ -327,19 +327,19 @@
       }
     },
 
-    moveColumn: function(info) {
+    move: function(info) {
       var cells = info.cells[info.cellPosition],
-          colCell = cells[info.index];
+          cell = cells[info.index];
 
-      if (!colCell && this.options.cycle) {
-        colCell = cells[info.firstIndex ? 0 : cells.length - 1];
+      if (!cell && this.options.cycle) {
+        cell = cells[info.firstIndex ? 0 : cells.length - 1];
       }
 
-      if (!colCell) {
+      if (!cell) {
         return;
       }
 
-      this.setActive(colCell.$el);
+      this.setActive(cell.$el);
     },
 
     down: function($el, cellIndex) {
@@ -347,7 +347,7 @@
 
       var colCells = this.cellTable.columns;
 
-      this.moveColumn({
+      this.move({
         cellPosition: CellFactory.createFrom($el).pos.left,
         index: cellIndex.rowIndex + 1,
         cells: colCells,
@@ -360,7 +360,7 @@
 
       var colCells = this.cellTable.columns;
 
-      this.moveColumn({
+      this.move({
         cellPosition: CellFactory.createFrom($el).pos.left,
         index: cellIndex.rowIndex - 1,
         cells: colCells
@@ -372,7 +372,7 @@
 
       var rowCells = this.cellTable.rows;
 
-      this.moveColumn({
+      this.move({
         cellPosition: CellFactory.createFrom($el).pos.top,
         index: cellIndex.colIndex - 1,
         cells: rowCells
@@ -384,7 +384,7 @@
 
       var rowCells = this.cellTable.rows;
 
-      this.moveColumn({
+      this.move({
         cellPosition: CellFactory.createFrom($el).pos.top,
         index: cellIndex.colIndex + 1,
         cells: rowCells,
