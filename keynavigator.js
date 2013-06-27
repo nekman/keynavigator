@@ -477,21 +477,24 @@
       }, 200);
     });
 
-    $parent.on('keydown', $.proxy(navigator.handleKeyDown, navigator));
+    // Unbind the events before bind.
+    $parent.off('keydown')
+           .off(navigator.options.parentFocusOn)
+           .on('keydown', $.proxy(navigator.handleKeyDown, navigator))
+           .on(navigator.options.parentFocusOn, function() {
+            $parent.focus();
+          });
 
-    if (navigator.options.activateOn) {
-      this.on(navigator.options.activateOn, function() {
+    this.off(navigator.options.activateOn)
+        .on(navigator.options.activateOn, function() {
           navigator.setActive($(this));
-      });
-    }
+        });
 
-    if (navigator.options.parentFocusOn) {
-      $parent.on(navigator.options.parentFocusOn, function() {
-        $parent.focus();
-      });
-    }
-
-    return this;
+    // return a extended jQuery node with
+    // a 'instance' property that points to the 'KeyNavigator' instance.
+    return $.extend(this, {
+      instance: navigator
+    });
   };
 
   // Return the $-function.
