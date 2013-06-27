@@ -121,7 +121,98 @@
         });
 
         /* Example 7 */
-        $('#example7 ul li:not(.divider)').keynavigator();
+        var $keynavigator = $('table#example7 > tbody tr').keynavigator({
+          // NOTE: Important to use useCache = false when DOM-nodes are going to be 
+          // added/removed.
+          useCache: false,
+          keys: {
+            escape: function($el) {
+              // Remove current element and set the active 
+              // element to previous or next.
+              var $prev = $el.prev(),
+                  $next = $el.next();
+
+              $el.remove();
+
+              // 'this' is the KeyNavigator instance.
+              this.setActive($prev.length ? $prev : $next);
+            }
+          }
+        });
+
+        $('#btnAddRow').on('click', function() {
+          $keynavigator.parent().append(
+            '<tr><td>Appended!</td></tr>'
+          );
+        });
+
+        /* Example 8 */
+        (function() {          
+          var settings = {
+            // NOTE: Important to use useCache = false when DOM-nodes are going to be 
+            // added/removed.
+            useCache: false,
+            keys: {
+              escape: function($el) {
+                // Remove current element and set the active 
+                // element to previous or next.
+                var $prev = $el.prev(),
+                    $next = $el.next();
+
+                $el.remove();
+
+                // 'this' is the KeyNavigator instance.
+                // Set active element.
+                this.setActive($prev.length ? $prev : $next);
+              }
+            }
+          },
+
+          $tbody = $('table#example8 > tbody'),
+          
+          // Get a list of countries.
+          loadCountries = function() {          
+            $.ajax({
+              url: 'http://www.geognos.com/api/en/countries/info/all.jsonp',
+              jsonpCallback: 'callback',
+              dataType: "jsonp"
+            })
+            .done(render);
+          },
+
+          render = function(data) {            
+            var counter = 0;
+
+            // Empty the tbody
+            $tbody.empty();
+            $.each(data.Results, function() {
+              // Only get the first 10 countries.
+              if (counter++ >= 10) {
+                return false;
+              }
+
+              // Append row
+              $tbody.append(
+                '<tr>' + 
+                  '<td>' + this.Name + '</td>' +
+                  '<td>' + (this.Capital ? this.Capital.Name : '?') + '</td>' +
+                  '<td>' + this.TelPref + '</td>' +
+                '</tr>'
+              );
+            });
+
+            // (Re) - initialize the keynavigator after
+            // adding the rows.
+            $tbody.find('tr').keynavigator(settings);
+          },
+
+          init = function() {
+            $('#btnLoadCountries').on('click', loadCountries);  
+          };
+
+          init();
+
+        }());
     });
   </script>
 </head>
@@ -520,6 +611,137 @@ $('ul#example6 li').keynavigator({
 });
 </pre>
 
+<hr/>
+<h4>Example 7</h4>
+<p>Re-initialize after adding a row. Press the button to add a row.</p>
+<input type="button" class="btn btn-large btn-primary" id="btnAddRow" value="Add row" />
+
+<table class="table" id="example7">
+  <thead>
+    <tr>
+      <th>Items</th>    
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Item 1</td></tr>
+    <tr><td>Item 2</td></tr>
+  </tbody>
+</table>
+
+<p>Code:</p>
+<pre class="prettyprint lang-javascript">
+var $keynavigator = $('table#example7 > tbody tr').keynavigator({
+  // NOTE: Important to use useCache = false when DOM-nodes are going to be 
+  // added/removed.
+  useCache: false,
+  keys: {
+    escape: function($el) {
+      // Remove current element and set the active 
+      // element to previous or next.
+      var $prev = $el.prev(),
+          $next = $el.next();
+
+      $el.remove();
+
+      // 'this' is the KeyNavigator instance.
+      this.setActive($prev.length ? $prev : $next);
+    }
+  }
+});
+
+$('#btnAddRow').on('click', function() {
+  $keynavigator.parent().append(
+    '&lt;tr&gt;&lt;td&gt;Appended!&lt;/td&gt;&lt;/tr&gt;'
+  );
+});
+</pre>
+<hr/>
+<h4>Example 8</h4>
+<p>Re-initialize after a ajax request. Press <code>escape</code> to remove a row.</p>
+<input type="button" class="btn btn-large btn-primary" id="btnLoadCountries" value="Load countries" />
+<table class="table" id="example8">
+  <thead>
+    <tr>
+      <th>Country</th>
+      <th>Capital</th>
+      <th>Tel. prefix</th>      
+    </tr>
+  </thead>
+  <tbody>    
+  </tbody>
+</table>
+
+<p>Code:</p>
+<pre class="prettyprint lang-javascript">
+ (function() {          
+  var settings = {
+    // NOTE: Important to use useCache = false when DOM-nodes are going to be 
+    // added/removed.
+    useCache: false,
+    keys: {
+      escape: function($el) {
+        // Remove current element and set the active 
+        // element to previous or next.
+        var $prev = $el.prev(),
+            $next = $el.next();
+
+        $el.remove();
+
+        // 'this' is the KeyNavigator instance.
+        // Set active element.
+        this.setActive($prev.length ? $prev : $next);
+      }
+    }
+  },
+
+  $tbody = $('table#example8 > tbody'),
+  
+  // Get a list of countries.
+  loadCountries = function() {          
+    $.ajax({
+      url: 'http://www.geognos.com/api/en/countries/info/all.jsonp',
+      jsonpCallback: 'callback',
+      dataType: "jsonp"
+    })
+    .done(render);
+  },
+
+  render = function(data) {            
+    var counter = 0;
+
+    // Empty the tbody
+    $tbody.empty();
+    $.each(data.Results, function() {
+      // Only get the first 10 countries.
+      if (counter++ >= 10) {
+        return false;
+      }
+
+      // Append row
+      $tbody.append(
+        '&lt;tr&gt;' + 
+          '&lt;td&gt;' + this.Name + '&lt;/td&gt;' +
+          '&lt;td&gt;' + (this.Capital ? this.Capital.Name : '?') + '&lt;/td&gt;' +
+          '&lt;td&gt;' + this.TelPref + '&lt;/td&gt;' +
+        '&lt;/tr&gt;'
+      );
+
+    });
+
+    // (Re) - initialize the keynavigator after
+    // adding the rows.
+    $tbody.find('tr').keynavigator(settings);
+  },
+
+  init = function() {
+    $('#btnLoadCountries').on('click', loadCountries);  
+  };
+
+  init();
+
+}());
+
+</pre>
 
 </div> <!-- main div end -->
 
