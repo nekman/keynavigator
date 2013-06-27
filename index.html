@@ -121,29 +121,22 @@
         });
 
         /* Example 7 */
-        var $keynavigator = $('table#example7 > tbody tr').keynavigator({
-          // NOTE: Important to use useCache = false when DOM-nodes are going to be 
-          // added/removed.
-          useCache: false,
-          keys: {
-            escape: function($el) {
-              // Remove current element and set the active 
-              // element to previous or next.
-              var $prev = $el.prev(),
-                  $next = $el.next();
-
-              $el.remove();
-
-              // 'this' is the KeyNavigator instance.
-              this.setActive($prev.length ? $prev : $next);
-            }
-          }
-        });
+        var $keynavigator = $('table#example7 > tbody tr').keynavigator();
 
         $('#btnAddRow').on('click', function() {
+          /* var $row = $('<tr>').on('click', function() {
+                                  $keynavigator.instance.setActive($(this));
+                              })
+                              .append('<td>Appended!</td>');
+
+          $keynavigator.parent().append($row);
+          $keynavigator.instance.reBuild();   */  
+
           $keynavigator.parent().append(
             '<tr><td>Appended!</td></tr>'
-          );
+          )
+
+          $keynavigator.parent().find('tr').keynavigator();
         });
 
         /* Example 8 */
@@ -630,29 +623,15 @@ $('ul#example6 li').keynavigator({
 
 <p>Code:</p>
 <pre class="prettyprint lang-javascript">
-var $keynavigator = $('table#example7 > tbody tr').keynavigator({
-  // NOTE: Important to use useCache = false when DOM-nodes are going to be 
-  // added/removed.
-  useCache: false,
-  keys: {
-    escape: function($el) {
-      // Remove current element and set the active 
-      // element to previous or next.
-      var $prev = $el.prev(),
-          $next = $el.next();
-
-      $el.remove();
-
-      // 'this' is the KeyNavigator instance.
-      this.setActive($prev.length ? $prev : $next);
-    }
-  }
-});
+var $keynavigator = $('table#example7 > tbody tr').keynavigator();
 
 $('#btnAddRow').on('click', function() {
   $keynavigator.parent().append(
     '&lt;tr&gt;&lt;td&gt;Appended!&lt;/td&gt;&lt;/tr&gt;'
   );
+
+  //Re-init
+  $keynavigator.parent().find('tr').keynavigator();
 });
 </pre>
 <hr/>
