@@ -121,22 +121,16 @@
         });
 
         /* Example 7 */
-        var $keynavigator = $('table#example7 > tbody tr').keynavigator();
+        var $keynavigator = $('table#example7 > tbody tr').keynavigator({
+          useCache: false
+        });
 
         $('#btnAddRow').on('click', function() {
-          /* var $row = $('<tr>').on('click', function() {
-                                  $keynavigator.instance.setActive($(this));
-                              })
-                              .append('<td>Appended!</td>');
-
-          $keynavigator.parent().append($row);
-          $keynavigator.instance.reBuild();   */  
-
           $keynavigator.parent().append(
             '<tr><td>Appended!</td></tr>'
-          )
+          );
 
-          $keynavigator.parent().find('tr').keynavigator();
+          $keynavigator.instance.reBuild();
         });
 
         /* Example 8 */
@@ -160,51 +154,43 @@
               }
             }
           },
-
+          
+          $keynavigator,
           $tbody = $('table#example8 > tbody'),
           
           // Get a list of countries.
-          loadCountries = function() {          
+          loadBreweries = function() {          
             $.ajax({
-              url: 'http://www.geognos.com/api/en/countries/info/all.jsonp',
-              jsonpCallback: 'callback',
-              dataType: "jsonp"
-            })
-            .done(render);
+              url: 'http://api.openbeerdatabase.com/v1/breweries.json?callback=?',
+              dataType: 'jsonp'
+            }).done(render);
           },
 
-          render = function(data) {            
-            var counter = 0;
-
+          render = function(data) {
             // Empty the tbody
             $tbody.empty();
-            $.each(data.Results, function() {
-              // Only get the first 10 countries.
-              if (counter++ >= 10) {
-                return false;
-              }
-
+            $.each(data.breweries, function(index, brewerie) {
               // Append row
               $tbody.append(
                 '<tr>' + 
-                  '<td>' + this.Name + '</td>' +
-                  '<td>' + (this.Capital ? this.Capital.Name : '?') + '</td>' +
-                  '<td>' + this.TelPref + '</td>' +
+                  '<td>' + brewerie.id + '</td>' +
+                  '<td>' + brewerie.name + '</td>' +
+                  '<td><a target="_blank" href="{url}">{url}</a></td>'.replace(/{url}/g, brewerie.url) +
                 '</tr>'
               );
             });
 
-            // (Re) - initialize the keynavigator after
-            // adding the rows.
-            $tbody.find('tr').keynavigator(settings);
-          },
+            if (!$keynavigator) {
+              $keynavigator = $tbody.find('tr').keynavigator(settings);
+            } else {
+              $keynavigator.instance.reBuild();
+            }
 
-          init = function() {
-            $('#btnLoadCountries').on('click', loadCountries);  
           };
 
-          init();
-
+          // init
+          $('#btnLoadBreweries').on('click', loadBreweries);  
+          
         }());
     });
   </script>
@@ -630,20 +616,20 @@ $('#btnAddRow').on('click', function() {
     '&lt;tr&gt;&lt;td&gt;Appended!&lt;/td&gt;&lt;/tr&gt;'
   );
 
-  //Re-init
-  $keynavigator.parent().find('tr').keynavigator();
+  //Rebuild
+  $keynavigator.instance.reBuild();
 });
 </pre>
 <hr/>
 <h4>Example 8</h4>
 <p>Re-initialize after a ajax request. Press <code>escape</code> to remove a row.</p>
-<input type="button" class="btn btn-large btn-primary" id="btnLoadCountries" value="Load countries" />
+<input type="button" class="btn btn-large btn-primary" id="btnLoadBreweries" value="Load beer breweries" />
 <table class="table" id="example8">
   <thead>
     <tr>
-      <th>Country</th>
-      <th>Capital</th>
-      <th>Tel. prefix</th>      
+      <th>Id</th>
+      <th>Name</th>
+      <th>Url</th>      
     </tr>
   </thead>
   <tbody>    
@@ -652,73 +638,61 @@ $('#btnAddRow').on('click', function() {
 
 <p>Code:</p>
 <pre class="prettyprint lang-javascript">
- (function() {          
-  var settings = {
-    // NOTE: Important to use useCache = false when DOM-nodes are going to be 
-    // added/removed.
-    useCache: false,
-    keys: {
-      escape: function($el) {
-        // Remove current element and set the active 
-        // element to previous or next.
-        var $prev = $el.prev(),
-            $next = $el.next();
+var settings = {
+  // NOTE: Important to use useCache = false when DOM-nodes are going to be 
+  // added/removed.
+  useCache: false,
+  keys: {
+    escape: function($el) {
+      // Remove current element and set the active 
+      // element to previous or next.
+      var $prev = $el.prev(),
+          $next = $el.next();
 
-        $el.remove();
+      $el.remove();
 
-        // 'this' is the KeyNavigator instance.
-        // Set active element.
-        this.setActive($prev.length ? $prev : $next);
-      }
+      // 'this' is the KeyNavigator instance.
+      // Set active element.
+      this.setActive($prev.length ? $prev : $next);
     }
-  },
+  }
+},
+$keynavigator,
+$tbody = $('table#example8 > tbody'),
 
-  $tbody = $('table#example8 > tbody'),
-  
-  // Get a list of countries.
-  loadCountries = function() {          
-    $.ajax({
-      url: 'http://www.geognos.com/api/en/countries/info/all.jsonp',
-      jsonpCallback: 'callback',
-      dataType: "jsonp"
-    })
-    .done(render);
-  },
+// Get a list of countries.
+loadBreweries = function() {          
+  $.ajax({
+    url: 'http://api.openbeerdatabase.com/v1/breweries.json?callback=?',
+    dataType: 'jsonp'
+  }).done(render);
+},
 
-  render = function(data) {            
-    var counter = 0;
+render = function(data) {
+  // Empty the tbody
+  $tbody.empty();
 
-    // Empty the tbody
-    $tbody.empty();
-    $.each(data.Results, function() {
-      // Only get the first 10 countries.
-      if (counter++ >= 10) {
-        return false;
-      }
+  // Append rows
+  $.each(data.breweries, function(index, brewerie) {    
+    $tbody.append(
+      '<tr>' + 
+        '<td>' + brewerie.id + '</td>' +
+        '<td>' + brewerie.name + '</td>' +
+        '<td><a target="_blank" href="{url}">{url}</a></td>'.replace(/{url}/g, brewerie.url) +
+      '</tr>'
+    );
+  });
 
-      // Append row
-      $tbody.append(
-        '&lt;tr&gt;' + 
-          '&lt;td&gt;' + this.Name + '&lt;/td&gt;' +
-          '&lt;td&gt;' + (this.Capital ? this.Capital.Name : '?') + '&lt;/td&gt;' +
-          '&lt;td&gt;' + this.TelPref + '&lt;/td&gt;' +
-        '&lt;/tr&gt;'
-      );
+  if (!$keynavigator) {
+    $keynavigator = $tbody.find('tr').keynavigator(settings);
+  } else {
+    $keynavigator.instance.reBuild();
+  }
+};
 
-    });
+// init
+$('#btnLoadBreweries').on('click', loadBreweries);  
 
-    // (Re) - initialize the keynavigator after
-    // adding the rows.
-    $tbody.find('tr').keynavigator(settings);
-  },
-
-  init = function() {
-    $('#btnLoadCountries').on('click', loadCountries);  
-  };
-
-  init();
-
-}());
 
 </pre>
 
