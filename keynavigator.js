@@ -27,10 +27,9 @@
    * KeyNavigator
    *
    * @param $nodes - jQuery nodes.
-   * @param $parent - The parent element.
    * @param settings - Optional settings.
    */
-  var KeyNavigator = function($nodes, $parent, settings)  {
+  var KeyNavigator = function($nodes, settings)  {
     // Extend custom settings with default settings.
     // Could 'deep copy' ($.extend(true, ...)) the entire settings, but this could result
     // in conflicts betweeen methods provided by KeyNavigator and methods provided
@@ -39,19 +38,18 @@
     this.options = $.extend({}, this.defaults, options);
     this.options.keys = $.extend({}, this.defaults.keys, options.keys);
 
-    if (this.options.removeOutline) {
-      $parent.css({ outline: 'none' });
-    }
-
     this.$nodes = $nodes;
+    this.$parent = $nodes.parent();
+
+    if (this.options.removeOutline) {
+      this.$parent.css({ outline: 'none' });
+    }
 
     // If the parent node doesn't have a tabindex attribute, then add one.
     // This is needed to be able to set focus on the node.
-    if (!$parent.attr('tabindex')) {
-      $parent.attr({ tabindex: this.options.tabindex || -1 });
-    }
-
-    this.$parent = $parent;
+    if (!this.$parent.attr('tabindex')) {
+      this.$parent.attr({ tabindex: this.options.tabindex || -1 });
+    }    
   };
 
   // Key mappings.
@@ -453,11 +451,30 @@
     },
 
     reBuild: function() {
+      var $parent = this.$parent,
+          self = this;
+
+
       // If 'useCache' isn't enabled, 
       // then query for DOM-nodes with the same selector.
       if (!this.options.useCache) {
         this.$nodes = $(this.$nodes.selector);
       }
+
+      // Unbind the events before bind.
+      $parent
+          .off('keydown')
+          .off(this.options.parentFocusOn)
+          .on('keydown', $.proxy(this.handleKeyDown, this))
+          .on(this.options.parentFocusOn, function() {
+            $parent.focus();
+          });
+
+      this.$nodes.off(this.options.activateOn)
+          .on(this.options.activateOn, function() {
+            self.setActive($(this));
+          });
+
 
       this.cellTable = new CellTable(this.$nodes);
     }
@@ -465,7 +482,7 @@
 
   $.fn.keynavigator = function(options) {
     var $parent = this.parent(),
-        navigator = new KeyNavigator(this, $parent, options);
+        navigator = new KeyNavigator(this, options);
 
     // Need to wait until resizing  is done, so that we don't
     // rebuilding the cellTable more times than we need to.
@@ -477,20 +494,9 @@
       }, 200);
     });
 
-    // Unbind the events before bind.
-    $parent.off('keydown')
-           .off(navigator.options.parentFocusOn)
-           .on('keydown', $.proxy(navigator.handleKeyDown, navigator))
-           .on(navigator.options.parentFocusOn, function() {
-            $parent.focus();
-          });
+    navigator.reBuild();
 
-    this.off(navigator.options.activateOn)
-        .on(navigator.options.activateOn, function() {
-          navigator.setActive($(this));
-        });
-
-    // return a extended jQuery node with
+    // Return a extended jQuery node with
     // a 'instance' property that points to the 'KeyNavigator' instance.
     return $.extend(this, {
       instance: navigator
