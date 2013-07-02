@@ -39,7 +39,9 @@
     this.options.keys = $.extend({}, this.defaults.keys, options.keys);
 
     this.$nodes = $nodes;
-    this.$parent = $nodes.parent();
+    this.$parent =
+        this.options.parent ?
+        $(this.options.parent) : $nodes.parent();
 
     if (this.options.removeOutline) {
       this.$parent.css({ outline: 'none' });
@@ -49,7 +51,7 @@
     // This is needed to be able to set focus on the node.
     if (!this.$parent.attr('tabindex')) {
       this.$parent.attr({ tabindex: this.options.tabindex || -1 });
-    }    
+    }
   };
 
   // Key mappings.
@@ -451,6 +453,8 @@
     },
 
     reBuild: function() {
+
+      // Unbind the events before bind.
       var $parent = this.$parent,
           self = this;
 
@@ -458,10 +462,11 @@
       // If 'useCache' isn't enabled, 
       // then query for DOM-nodes with the same selector.
       if (!this.options.useCache) {
+        console.log('NODES', this.$nodes.selector);
+
         this.$nodes = $(this.$nodes.selector);
       }
 
-      // Unbind the events before bind.
       $parent
           .off('keydown')
           .off(this.options.parentFocusOn)
@@ -481,8 +486,7 @@
   };
 
   $.fn.keynavigator = function(options) {
-    var $parent = this.parent(),
-        navigator = new KeyNavigator(this, options);
+    var keynavigator = new KeyNavigator(this, options);
 
     // Need to wait until resizing  is done, so that we don't
     // rebuilding the cellTable more times than we need to.
@@ -490,16 +494,16 @@
     $(window).on('resize', function() {
       clearTimeout(resizing);
       resizing = setTimeout(function() {
-        navigator.reBuild();
+        keynavigator.reBuild();
       }, 200);
     });
 
-    navigator.reBuild();
+    keynavigator.reBuild();
 
     // Return a extended jQuery node with
-    // a 'instance' property that points to the 'KeyNavigator' instance.
+    // a 'keynavigator' property that points to the 'KeyNavigator' instance.
     return $.extend(this, {
-      instance: navigator
+      keynavigator: keynavigator
     });
   };
 

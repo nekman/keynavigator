@@ -44,9 +44,15 @@ describe('Keynavigator', function() {
   describe('Custom settings', function() {
 
     it('handles bad settings', function() {
-      $('ul li').keynavigator(null)
-                .keynavigator('')
-                .keynavigator('a');
+      $('ul li').keynavigator('');
+      $('ul li').keynavigator('a');
+      $('ul li').keynavigator(null);
+    });
+
+    it('has a keynavigator property', function() {
+      var $nodes = $('ul li').keynavigator();
+
+      expect($nodes.keynavigator).toBeDefined();
     });
   });
 
