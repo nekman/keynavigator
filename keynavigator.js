@@ -462,8 +462,6 @@
       // If 'useCache' isn't enabled, 
       // then query for DOM-nodes with the same selector.
       if (!this.options.useCache) {
-        console.log('NODES', this.$nodes.selector);
-
         this.$nodes = $(this.$nodes.selector);
       }
 
