@@ -51,7 +51,7 @@
     // This is needed to be able to set focus on the node.
     if (!this.$parent.attr('tabindex')) {
       this.$parent.attr({ tabindex: this.options.tabindex || -1 });
-    }    
+    }
   };
 
   // Key mappings.
@@ -462,8 +462,6 @@
       // If 'useCache' isn't enabled, 
       // then query for DOM-nodes with the same selector.
       if (!this.options.useCache) {
-        console.log('NODES', this.$nodes.selector);
-
         this.$nodes = $(this.$nodes.selector);
       }
 
@@ -496,7 +494,9 @@
       resizing = setTimeout(function() {
         keynavigator.reBuild();
       }, 200);
-    }).trigger('resize');
+    });
+
+    keynavigator.reBuild();
 
     // Return a extended jQuery node with
     // a 'keynavigator' property that points to the 'KeyNavigator' instance.
