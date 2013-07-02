@@ -121,77 +121,70 @@
         });
 
         /* Example 7 */
-        var $keynavigator = $('table#example7 > tbody tr').keynavigator({
+        var $rows = $('table#example7 > tbody tr').keynavigator({
           useCache: false
         });
 
         $('#btnAddRow').on('click', function() {
-          $keynavigator.parent().append(
+          $rows.parent().append(
             '<tr><td>Appended!</td></tr>'
           );
 
-          $keynavigator.instance.reBuild();
+          $rows.keynavigator.reBuild();
         });
 
-        /* Example 8 */
-        (function() {          
-          var settings = {
-            // NOTE: Important to use useCache = false when DOM-nodes are going to be 
-            // added/removed.
-            useCache: false,
-            keys: {
-              escape: function($el) {
-                // Remove current element and set the active 
-                // element to previous or next.
-                var $prev = $el.prev(),
-                    $next = $el.next();
+        /* Example 8 */   
+        var $tbody = $('table#example8 > tbody tr').keynavigator({
+          // NOTE: Important to use useCache = false when DOM-nodes are going to be 
+          // added/removed.
+          useCache: false,
+          // Custom parent
+          parent: 'table#example8 > tbody', 
+          keys: {
+            escape: function($el) {
+              // Remove current element and set the active 
+              // element to previous or next.
+              var $prev = $el.prev(),
+                  $next = $el.next();
 
-                $el.remove();
+              $el.remove();
 
-                // 'this' is the KeyNavigator instance.
-                // Set active element.
-                this.setActive($prev.length ? $prev : $next);
-              }
+              // 'this' is the KeyNavigator instance.
+              // Set active element.
+              this.setActive($prev.length ? $prev : $next);
             }
-          },
-          
-          $keynavigator,
-          $tbody = $('table#example8 > tbody'),
-          
-          // Get a list of countries.
-          loadBreweries = function() {          
-            $.ajax({
-              url: 'http://api.openbeerdatabase.com/v1/breweries.json?callback=?',
-              dataType: 'jsonp'
-            }).done(render);
-          },
+          }
+        }),
 
-          render = function(data) {
-            // Empty the tbody
-            $tbody.empty();
-            $.each(data.breweries, function(index, brewerie) {
-              // Append row
-              $tbody.append(
-                '<tr>' + 
-                  '<td>' + brewerie.id + '</td>' +
-                  '<td>' + brewerie.name + '</td>' +
-                  '<td><a target="_blank" href="{url}">{url}</a></td>'.replace(/{url}/g, brewerie.url) +
-                '</tr>'
-              );
-            });
+        // Get a list of beer breweries.
+        loadBreweries = function() {          
+          $.ajax({
+            url: 'http://api.openbeerdatabase.com/v1/breweries.json?callback=?',
+            dataType: 'jsonp'
+          }).done(render);
+        },
 
-            if (!$keynavigator) {
-              $keynavigator = $tbody.find('tr').keynavigator(settings);
-            } else {
-              $keynavigator.instance.reBuild();
-            }
+        render = function(data) {
+          // Empty
+          $tbody.keynavigator.$parent.empty();
 
-          };
+          // Append rows
+          $.each(data.breweries, function(index, brewerie) {            
+            $tbody.keynavigator.$parent.append(
+              '<tr>' + 
+                '<td>' + brewerie.id + '</td>' +
+                '<td>' + brewerie.name + '</td>' +
+                '<td><a target="_blank" href="{url}">{url}</a></td>'.replace(/{url}/g, brewerie.url) +
+              '</tr>'
+            );
+          });
 
-          // init
-          $('#btnLoadBreweries').on('click', loadBreweries);  
-          
-        }());
+          $tbody.keynavigator.reBuild();
+        };
+
+        // init
+        $('#btnLoadBreweries').on('click', loadBreweries);  
+
     });
   </script>
 </head>
@@ -609,20 +602,22 @@ $('ul#example6 li').keynavigator({
 
 <p>Code:</p>
 <pre class="prettyprint lang-javascript">
-var $keynavigator = $('table#example7 > tbody tr').keynavigator();
+// The $rows variable is a extended jQuery node with
+// a 'keynavigator' property that points to the 'KeyNavigator' instance.
+var $rows = $('table#example7 > tbody tr').keynavigator();
 
 $('#btnAddRow').on('click', function() {
-  $keynavigator.parent().append(
+  $rows.parent().append(
     '&lt;tr&gt;&lt;td&gt;Appended!&lt;/td&gt;&lt;/tr&gt;'
   );
 
   //Rebuild
-  $keynavigator.instance.reBuild();
+  $rows.keynavigator.reBuild();
 });
 </pre>
 <hr/>
 <h4>Example 8</h4>
-<p>Re-initialize after a ajax request. Press <code>escape</code> to remove a row.</p>
+<p>Re-initialize after a ajax request. Uses a custom parent. Press <code>escape</code> to remove a row.</p>
 <input type="button" class="btn btn-large btn-primary" id="btnLoadBreweries" value="Load beer breweries" />
 <table class="table" id="example8">
   <thead>
@@ -638,10 +633,16 @@ $('#btnAddRow').on('click', function() {
 
 <p>Code:</p>
 <pre class="prettyprint lang-javascript">
-var settings = {
+/* Example 8 */   
+
+// The $tbody variable is a extended jQuery node with
+// a 'keynavigator' property that points to the 'KeyNavigator' instance.
+var $tbody = $('table#example8 > tbody tr').keynavigator({
   // NOTE: Important to use useCache = false when DOM-nodes are going to be 
   // added/removed.
   useCache: false,
+  // Custom parent
+  parent: 'table#example8 > tbody', 
   keys: {
     escape: function($el) {
       // Remove current element and set the active 
@@ -656,11 +657,9 @@ var settings = {
       this.setActive($prev.length ? $prev : $next);
     }
   }
-},
-$keynavigator,
-$tbody = $('table#example8 > tbody'),
+}),
 
-// Get a list of countries.
+// Get a list of beer breweries.
 loadBreweries = function() {          
   $.ajax({
     url: 'http://api.openbeerdatabase.com/v1/breweries.json?callback=?',
@@ -669,30 +668,25 @@ loadBreweries = function() {
 },
 
 render = function(data) {
-  // Empty the tbody
-  $tbody.empty();
+  // Empty
+  $tbody.keynavigator.$parent.empty();
 
   // Append rows
   $.each(data.breweries, function(index, brewerie) {    
-    $tbody.append(
-      '<tr>' + 
-        '<td>' + brewerie.id + '</td>' +
-        '<td>' + brewerie.name + '</td>' +
-        '<td><a target="_blank" href="{url}">{url}</a></td>'.replace(/{url}/g, brewerie.url) +
-      '</tr>'
+    $tbody.keynavigator.$parent.append(
+      '&lt;tr&gt;' + 
+        '&lt;td&gt;' + brewerie.id + '&lt;/td&gt;' +
+        '&lt;td&gt;' + brewerie.name + '&lt;/td&gt;' +
+        '&lt;td&gt;&lt;a target="_blank" href="{url}"&gt;{url}&lt;/a&gt;&lt;/td&gt;'.replace(/{url}/g, brewerie.url) +
+      '&lt;/tr&gt;'
     );
   });
 
-  if (!$keynavigator) {
-    $keynavigator = $tbody.find('tr').keynavigator(settings);
-  } else {
-    $keynavigator.instance.reBuild();
-  }
+  $tbody.keynavigator.reBuild();
 };
 
 // init
-$('#btnLoadBreweries').on('click', loadBreweries);  
-
+$('#btnLoadBreweries').on('click', loadBreweries);
 
 </pre>
 
