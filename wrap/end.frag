@@ -1,0 +1,3 @@
+  // Return the $-function.
+  return $;
+}));
