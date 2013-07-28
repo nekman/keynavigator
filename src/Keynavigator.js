@@ -1,7 +1,5 @@
 
 /*
- * KeyNavigator
- *
  * @param $nodes - jQuery nodes.
  * @param settings - Optional settings.
  */

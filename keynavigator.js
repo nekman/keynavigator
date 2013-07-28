@@ -14,7 +14,7 @@
     // If Zepto is used, define jquery and return Zepto eg:
     // 
     //    define('jquery', function() {
-    //      return $;
+    //      return jQuery;
     //    });
     //
     define('keynavigator', ['jquery'], factory);
@@ -25,8 +25,6 @@
 }(this, function($) {
 
 /*
- * KeyNavigator
- *
  * @param $nodes - jQuery nodes.
  * @param settings - Optional settings.
  */
@@ -354,7 +352,7 @@ $.fn.keynavigator = function(options) {
   });
 };
 /*
- * Utility for converting a jQuery position to a {cell} object.
+ * Utility for converting a jQuery position to a {cell} object
  */
 var CellFactory = {
   createFrom: function($el) {
@@ -375,7 +373,7 @@ var CellFactory = {
  * CellTable
  *  - Finds and navigates in cells.
  *
- * @param $nodes - jQuery nodes to build the cell table from. 
+ * @param $nodes - jQuery nodes to build the cell table from.
  *
  * TODO: Refactor!
  */
@@ -503,6 +501,6 @@ CellTable.prototype = {
       rowIndex: rowIndex
     };
   }
-};  // Return the $-function.
+};  // Return the $-function
   return $;
 }));

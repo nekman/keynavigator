@@ -14,7 +14,7 @@
     // If Zepto is used, define jquery and return Zepto eg:
     // 
     //    define('jquery', function() {
-    //      return $;
+    //      return jQuery;
     //    });
     //
     define('keynavigator', ['jquery'], factory);

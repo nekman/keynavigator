@@ -1,3 +1,3 @@
-  // Return the $-function.
+  // Return the $-function
   return $;
 }));

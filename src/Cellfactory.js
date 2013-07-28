@@ -1,5 +1,5 @@
 /*
- * Utility for converting a jQuery position to a {cell} object.
+ * Utility for converting a jQuery position to a {cell} object
  */
 var CellFactory = {
   createFrom: function($el) {

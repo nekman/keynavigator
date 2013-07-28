@@ -2,7 +2,7 @@
  * CellTable
  *  - Finds and navigates in cells.
  *
- * @param $nodes - jQuery nodes to build the cell table from. 
+ * @param $nodes - jQuery nodes to build the cell table from.
  *
  * TODO: Refactor!
  */
