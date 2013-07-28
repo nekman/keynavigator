@@ -4,15 +4,8 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    meta: {
-      banner: '/*! \n * \n * <%=pkg.description%>\n *\n * <%=pkg.url%> \n *\n *' +
-              ' v<%=pkg.version%> - <%=grunt.template.today("dddd, mmmm dS, yyyy, h:MM:ss TT")%> \n */'
-    },
-
-    banner: '<%= meta.banner %>', // Optional Banner
-
-    requirejs: {      
-      buildDev: {        
+    requirejs: {
+      buildDev: {
         options: {
           baseUrl: 'src',
           skipModuleInsertion: true,
