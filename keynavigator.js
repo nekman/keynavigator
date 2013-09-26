@@ -171,7 +171,9 @@ KeyNavigator.prototype = {
       down_arrow: 'down',
       left_arrow: 'left',
       right_arrow: 'right'
-    }
+    },
+    onBeforeActive: $.noop,
+    onAfterActive: $.noop
   },
 
   move: function(info) {
@@ -292,11 +294,24 @@ KeyNavigator.prototype = {
     fn.apply(this, [$selected, cell, e]);
   },
 
+  onBeforeActive: function($el) {
+    return this.options.onBeforeActive.apply(this, [$el]);
+  },
+
+  onAfterActive: function($el) {
+    return this.options.onAfterActive.apply(this, [$el]);
+  },
+
   setActive: function($el) {
+    var result = this.onBeforeActive($el);
     // Remove the active class (from all nodes), 
     // add the active class to the selected node.
-    this.$nodes.removeClass(this.options.activeClass);
-    $el.addClass(this.options.activeClass);
+    if (result !== false) {
+      this.$nodes.removeClass(this.options.activeClass);
+      $el.addClass(this.options.activeClass);
+    }
+
+    this.onAfterActive($el);
   },
 
   reBuild: function() {
@@ -320,12 +335,22 @@ KeyNavigator.prototype = {
           $parent.focus();
         });
 
-    this.$nodes.off(this.options.activateOn)
+
+    // Get all "non watched" nodes (thoose without the attribute keynavigator-watched).
+    // And apply the "activateOn" event.
+    // This is to avoid duplicate events if new nodes appears in the 
+    // DOM.
+    var $noneWatchedNodes = this.$nodes.filter(function() {
+      return !$(this).attr('keynavigator-watched');
+    });
+
+    $noneWatchedNodes
+        .attr('keynavigator-watched', true)
         .on(this.options.activateOn, function() {
           self.setActive($(this));
         });
-
-
+    
+    
     this.cellTable = new CellTable(this.$nodes);
   }
 };
