@@ -1,17 +1,23 @@
-/*
- * Utility for converting a jQuery position to a {cell} object
- */
-var CellFactory = {
-  createFrom: function($el) {
-    var position = $el.position();
+define(['jquery'], function() {
+  'use strict';
 
-    return {
-      pos: {
-        left: Math.round(position.left),
-        top: Math.round(position.top)
-      },
+  /*
+   * Utility for converting a jQuery position to a {cell} object
+   */
+  var CellFactory = {
+    createFrom: function($el) {
+      var position = $el.position();
 
-      $el: $el
-    };
-  }
-};
+      return {
+        pos: {
+          left: Math.round(position.left),
+          top: Math.round(position.top)
+        },
+
+        $el: $el
+      };
+    }
+  };
+
+  return CellFactory;
+});
