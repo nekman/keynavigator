@@ -63,6 +63,7 @@ module.exports = function(grunt) {
     onBuildWrite: convert,
     include: [
       'Keynavigator.js',
+      'Keymappings',
       'Cellfactory.js',
       'Celltable.js'
     ],
