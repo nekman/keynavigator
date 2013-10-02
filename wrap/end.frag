@@ -1,3 +1,5 @@
+
   // Return the $-function
   return $;
+
 }));
