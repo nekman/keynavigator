@@ -77,6 +77,40 @@ define(function(require) {
       });
     });
 
+    describe('DOM manipulation', function() {
+
+      describe('cache is not enabled', function() {
+        it('should handle inserted nodes', function() {
+          // Arrange
+          var $nodes = $('ul li').keynavigator({
+            activeClass: 'activeClass',
+            useCache: false
+          }).parent().append('<li>Row 4</li>');
+
+          expect($('ul li').last().attr('keynavigator-watched')).toBeUndefined();
+
+          $('ul').trigger(arrowDownEvent);
+
+          expect($('ul li').last().attr('keynavigator-watched')).toBe('true');
+        });
+      });
+
+      describe('cache is enabled', function() {
+        it('should not handle inserted nodes', function() {
+          // Arrange
+          var $nodes = $('ul li').keynavigator({
+            activeClass: 'activeClass',
+            useCache: true
+          }).parent().append('<li>Row 4</li>');
+
+          expect($('ul li').last().attr('keynavigator-watched')).toBeUndefined();
+
+          $('ul').trigger(arrowDownEvent);
+
+          expect($('ul li').last().attr('keynavigator-watched')).toBeUndefined();
+        });
+      });
+    });
   });
 
 });
