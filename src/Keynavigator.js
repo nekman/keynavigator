@@ -5,7 +5,6 @@ define([
     'jquery'
 ], function(CellTable, CellFactory, keyMappings, $) {
   'use strict';
-
   /*
    * @param $nodes - jQuery nodes.
    * @param settings - Optional settings.

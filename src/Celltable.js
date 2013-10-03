@@ -1,6 +1,5 @@
 define(['./Cellfactory', 'jquery'], function(CellFactory, $) {
   'use strict';
-
   /*
    * CellTable
    *  - Finds and navigates in cells.
@@ -107,7 +106,7 @@ define(['./Cellfactory', 'jquery'], function(CellFactory, $) {
       var index = 0,
           len = array.length;
 
-      for (index = 0; index < len; index++) {
+      for (; index < len; index++) {
         if (callback(array[index])) {
           return index;
         }

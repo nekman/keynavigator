@@ -17,13 +17,12 @@
     //      return jQuery;
     //    });
     //
-    define('keynavigator', ['jquery'], factory);
+    define(['jquery'], factory);
   } else {
     // Assume jQuery or Zepto are loaded from <script> tags.
     factory(root.jQuery || root.Zepto);
   }
 }(this, function($) {
-
 
   
 
@@ -46,7 +45,6 @@
   };
 
   
-
   /*
    * CellTable
    *  - Finds and navigates in cells.
@@ -153,7 +151,7 @@
       var index = 0,
           len = array.length;
 
-      for (index = 0; index < len; index++) {
+      for (; index < len; index++) {
         if (callback(array[index])) {
           return index;
         }
@@ -284,7 +282,6 @@
   };
 
   
-
   /*
    * @param $nodes - jQuery nodes.
    * @param settings - Optional settings.

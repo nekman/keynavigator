@@ -1,6 +1,6 @@
 {
   "name": "keynavigator",
-  "version": "2.1.1",
+  "version": "2.1.3",
   "title": "Keynavigator",
   "description": "Makes it possible to use arrow keys (or any key) for navigation in eg. ul or table elements. See the demo for more information.",
   "keywords": [
