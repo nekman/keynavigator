@@ -123,8 +123,8 @@ module.exports = function(grunt) {
         tasks: ['jshint'],
         options: {
           spawn: false,
-        },
-      },
+        }
+      }
     },
 
     // RequireJS with build task.
