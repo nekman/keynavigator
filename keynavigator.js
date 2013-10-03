@@ -45,7 +45,6 @@
   };
 
   
-
   /*
    * CellTable
    *  - Finds and navigates in cells.
@@ -152,7 +151,7 @@
       var index = 0,
           len = array.length;
 
-      for (index = 0; index < len; index++) {
+      for (; index < len; index++) {
         if (callback(array[index])) {
           return index;
         }

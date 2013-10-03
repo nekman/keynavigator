@@ -1,6 +1,5 @@
 module.exports = function(grunt) {
-
-  var jQuery = require('jquery');
+  'use strict';
 
   /*
    * From jQuery build: 
@@ -52,7 +51,7 @@ module.exports = function(grunt) {
   */
 
   // Dev build
-  var buildDevOptions = {
+  var buildOptions = {
     baseUrl: 'src',
     paths: {
       'jquery': 'empty:'
@@ -74,12 +73,6 @@ module.exports = function(grunt) {
       endFile: 'wrap/end.frag'
     }
   };
-
-  // Minified build
-  var buildOptions = jQuery.extend({}, buildDevOptions, {
-    optimize: 'uglify2',
-    out: 'keynavigator-min.js'
-  });
 
   // Grunt configuration.
   grunt.initConfig({
@@ -123,26 +116,49 @@ module.exports = function(grunt) {
       }
     },
 
-    // RequireJS with buildDev and build task.
-    requirejs: {
-      buildDev: {
-        options: buildDevOptions
+    //Watch - run "tasks" when a src/*.js file is modified.
+    watch: {
+      scripts: {
+        files: ['src/*.js'],
+        tasks: ['jshint'],
+        options: {
+          spawn: false,
+        },
       },
+    },
 
+    // RequireJS with build task.
+    requirejs: {
       build: {
         options: buildOptions
       }
+    },
+
+    // Uglify
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> v.<%= pkg.version %> - ' +
+                'build <%= grunt.template.today("isoDateTime") %> */\n'
+      },
+      dist: {
+        files: {
+          'keynavigator-min.js': ['keynavigator.js']
+        }
+      }
     }
+
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   
   grunt.registerTask('default', [
-    'requirejs:buildDev',
+    'requirejs:build',
     'jasmine',
     'jshint',
-    'requirejs:build',
+    'uglify'
   ]);
 };
