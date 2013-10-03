@@ -17,7 +17,7 @@
     //      return jQuery;
     //    });
     //
-    define('keynavigator', ['jquery'], factory);
+    define(['jquery'], factory);
   } else {
     // Assume jQuery or Zepto are loaded from <script> tags.
     factory(root.jQuery || root.Zepto);
