@@ -1,3 +1,4 @@
+
   <!doctype html>
   <html>
   <head>
@@ -40,8 +41,7 @@
       <script src="http://code.jquery.com/jquery-latest.min.js"></script>
       <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
       <script>
-      require(['keynavigator'], function($) {
-
+      require(['keynavigator-min'], function($) {          
           /*
            * Example 1
            */
@@ -117,12 +117,17 @@
             enter: function($el, e) {
               console.log('pressed enter on', $el.text());
             }
-          }         
+          }
         });
 
         /* Example 7 */
         var $rows = $('table#example7 > tbody tr').keynavigator({
-          useCache: false
+          useCache: false,
+
+          onBeforeActive: function($el) {
+            $el.toggleClass(this.options.activeClass);
+            return $el.hasClass(this.options.activeClass);
+          }       
         });
 
         $('#btnAddRow').on('click', function() {
@@ -604,7 +609,14 @@ $('ul#example6 li').keynavigator({
 <pre class="prettyprint lang-javascript">
 // The $rows variable is a extended jQuery node with
 // a 'keynavigator' property that points to the 'KeyNavigator' instance.
-var $rows = $('table#example7 > tbody tr').keynavigator();
+var $rows = $('table#example7 > tbody tr').keynavigator({
+  useCache: false,
+
+  onBeforeActive: function($el) {
+    $el.toggleClass(this.options.activeClass);
+    return $el.hasClass(this.options.activeClass);
+  }
+});
 
 $('#btnAddRow').on('click', function() {
   $rows.parent().append(
