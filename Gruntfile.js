@@ -103,6 +103,26 @@ module.exports = function(grunt) {
       }
     },
 
+    //JSHint options
+    jshint: {
+      files: ['src/*.js'],
+      options: {
+        curly: true,
+        // Strict equal (===) is not mandatory.
+        eqeqeq: false,
+        undef: true,
+        // We are running in a browser.
+        browser: true,
+        // Ignore "expected an assignment or 
+        // function call and instead saw an expression."
+        '-W030': false,
+        eqnull: true,
+        globals: {
+          define: true
+        }
+      }
+    },
+
     // RequireJS with buildDev and build task.
     requirejs: {
       buildDev: {
@@ -115,12 +135,14 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   
   grunt.registerTask('default', [
     'requirejs:buildDev',
     'jasmine',
+    'jshint',
     'requirejs:build',
   ]);
 };
