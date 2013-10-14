@@ -14,7 +14,6 @@ define(function(require) {
   });
 
   describe('Celltable', function() {
-
     it('builds a celltable', function() {
       var cellTable = new CellTable($('table tr'));
 
@@ -22,7 +21,5 @@ define(function(require) {
       expect(cellTable.table.length).toBe(3);
       expect(cellTable.table[0].pos).toBeDefined();
     });
-
   });
-
 });

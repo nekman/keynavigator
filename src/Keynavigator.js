@@ -257,6 +257,6 @@ define([
     });
   };
 
-  return KeyNavigator;
+  return $;
 
 });
