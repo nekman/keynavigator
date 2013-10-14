@@ -27,6 +27,15 @@ define(function(require) {
     arrowDownEvent = createKeyEvent(40 /* arrow down */),
     arrowUpEvent = createKeyEvent(38 /* arrow up */);
 
+    describe('Keynavigator', function() {
+      it('return jQuery instance', function() {
+        var $li = $('ul li').keynavigator();
+
+        expect($li instanceof jQuery).toBe(true);
+        expect(typeof $li.find).toBe('function');
+      });
+    });
+
     describe('Custom settings', function() {
 
       it('handles bad settings', function() {
