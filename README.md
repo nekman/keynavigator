@@ -1,6 +1,9 @@
 Keynavigator
 ======
 
+###Warning
+This is a old project and it is not longer maintained.
+
 [![Build Status](https://travis-ci.org/nekman/keynavigator.png?branch=master)](https://travis-ci.org/nekman/keynavigator)
 
 Key navigaton plugin for <a href="http://jquery.com">jQuery</a>/<a href="http://zeptojs.com">Zepto</a>.
