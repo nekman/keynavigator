@@ -243,7 +243,7 @@
     97: 'numpad_1',
     98: 'numpad_2',
     99: 'numpad_3',
-    100: 'numpad 4',
+    100: 'numpad_4',
     101: 'numpad_5',
     102: 'numpad_6',
     103: 'numpad_7',
